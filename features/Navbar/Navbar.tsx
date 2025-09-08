@@ -31,7 +31,7 @@ function Navbar() {
   return (
     <div className="flex h-full w-[18rem] flex-col gap-5 rounded-r-lg bg-gray-100 p-3">
       <Profile />
-      <div className="flex flex-1 flex-col justify-between">
+      <div className="mt-7 flex flex-1 flex-col justify-between">
         <div>
           {RoutesData.map((linkItem) => (
             <LinkItem
