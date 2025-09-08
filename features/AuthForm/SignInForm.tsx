@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PasswordMatchException } from "./PasswordMatchException";
+import { useRouter } from "next/navigation";
 
 export const formSchema = yup.object({
   username: yup.string().required("Please enter a valid username"),
@@ -26,9 +27,14 @@ export const formSchema = yup.object({
 });
 
 interface SignInFormProps {
-  onSignUp: (email: string, password: string) => Promise<void>;
+  onSignUp: (
+    email: string,
+    password: string,
+    metadata: { username: string; firstname: string; lastname: string },
+  ) => Promise<void>;
 }
 const SignInForm: React.FC<SignInFormProps> = ({ onSignUp }) => {
+  const router = useRouter();
   const form = useForm<yup.InferType<typeof formSchema>>({
     resolver: yupResolver(formSchema),
   });
@@ -38,13 +44,15 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSignUp }) => {
       if (values.password !== values.confirm_password)
         throw new PasswordMatchException("Passwords Do not Match");
 
-      await onSignUp(values.email, values.password);
+      await onSignUp(values.email, values.password, {
+        username: values.username,
+        firstname: values.firstname,
+        lastname: values.lastname,
+      });
 
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      );
+      toast.success("Account Created Successfuly");
+
+      router.push("/login");
     } catch (error) {
       console.error("Form submission error", error);
       if (error instanceof PasswordMatchException) toast.error(error.message);

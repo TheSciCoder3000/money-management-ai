@@ -2,8 +2,20 @@
 
 import { createClient } from "@/lib/supabase/server";
 
-export async function CreateUser(email: string, password: string) {
+export async function CreateUser(
+  email: string,
+  password: string,
+  metadata: { username: string; firstname: string; lastname: string },
+) {
   const supabase = await createClient();
 
-  await supabase.auth.signUp({ email, password });
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: metadata,
+    },
+  });
+
+  if (error) throw Error("error in creating user");
 }
