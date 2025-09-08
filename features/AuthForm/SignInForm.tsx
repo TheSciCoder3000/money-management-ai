@@ -16,24 +16,30 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PasswordMatchException } from "./PasswordMatchException";
 
-const formSchema = yup.object({
+export const formSchema = yup.object({
   username: yup.string().required("Please enter a valid username"),
+  email: yup.string().email().required("Please enter a valid email"),
   firstname: yup.string().required("Enter your First Name"),
   lastname: yup.string().required("Enter your Last Name"),
   password: yup.string().required("Please enter a password"),
   confirm_password: yup.string().required("Please re-enter a password"),
 });
 
-function SignInForm() {
+interface SignInFormProps {
+  onSignUp: (email: string, password: string) => Promise<void>;
+}
+const SignInForm: React.FC<SignInFormProps> = ({ onSignUp }) => {
   const form = useForm<yup.InferType<typeof formSchema>>({
     resolver: yupResolver(formSchema),
   });
 
-  function onSubmit(values: yup.InferType<typeof formSchema>) {
+  async function onSubmit(values: yup.InferType<typeof formSchema>) {
     try {
       if (values.password !== values.confirm_password)
         throw new PasswordMatchException("Passwords Do not Match");
-      console.log(values);
+
+      await onSignUp(values.email, values.password);
+
       toast(
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -54,6 +60,21 @@ function SignInForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8 py-10"
         >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="" type="email" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="username"
@@ -142,6 +163,6 @@ function SignInForm() {
       </Form>
     </div>
   );
-}
+};
 
 export default SignInForm;
