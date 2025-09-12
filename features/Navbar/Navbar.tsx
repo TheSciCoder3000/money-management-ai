@@ -29,7 +29,7 @@ const RoutesData: { label: string; href: Route; icon: typeof Settings }[] = [
 
 function Navbar() {
   return (
-    <div className="flex h-full w-[18rem] flex-col gap-5 rounded-r-lg bg-white p-3 shadow-sm">
+    <div className="flex h-full w-[15rem] flex-col gap-5 rounded-r-lg bg-white p-3 shadow-sm">
       <Profile />
       <div className="mt-7 flex flex-1 flex-col justify-between">
         <div>
