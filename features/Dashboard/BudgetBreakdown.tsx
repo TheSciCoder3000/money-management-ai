@@ -12,7 +12,9 @@ interface BudgetBreakdownProps {
 }
 const BudgetBreakdown: React.FC<BudgetBreakdownProps> = ({ className }) => {
   return (
-    <div className={cn("w-full rounded-md bg-white p-4 shadow-sm", className)}>
+    <div
+      className={cn("h-75 w-full rounded-md bg-white p-4 shadow-sm", className)}
+    >
       <h1 className="text-gray-500">Budget Breakdown</h1>
 
       <Doughnut

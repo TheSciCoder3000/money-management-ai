@@ -76,9 +76,14 @@ const ExpensesLimit: React.FC<ExpensesLimitProps> = ({ className }) => {
     },
   };
   return (
-    <div className={cn("w-full rounded-md bg-white p-4 shadow-sm", className)}>
+    <div
+      className={cn(
+        "flex h-75 w-full flex-col rounded-md bg-white p-4 shadow-sm",
+        className,
+      )}
+    >
       <h1 className="text-gray-500">Expenses</h1>
-      <div className="flex h-full items-center justify-center">
+      <div className="flex h-full flex-1 items-center justify-center">
         <Bar data={data} options={options} />
       </div>
     </div>
