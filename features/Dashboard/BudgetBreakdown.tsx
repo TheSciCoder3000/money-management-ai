@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import Container from "@/components/Container";
+import ContainerHeader from "./ContainerHeader";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -12,10 +14,8 @@ interface BudgetBreakdownProps {
 }
 const BudgetBreakdown: React.FC<BudgetBreakdownProps> = ({ className }) => {
   return (
-    <div
-      className={cn("h-75 w-full rounded-md bg-white p-4 shadow-sm", className)}
-    >
-      <h1 className="text-gray-500">Budget Breakdown</h1>
+    <Container className={cn("h-75", className)}>
+      <ContainerHeader>Budget Breakdown</ContainerHeader>
 
       <Doughnut
         className="p-4"
@@ -35,7 +35,7 @@ const BudgetBreakdown: React.FC<BudgetBreakdownProps> = ({ className }) => {
           ],
         }}
       />
-    </div>
+    </Container>
   );
 };
 

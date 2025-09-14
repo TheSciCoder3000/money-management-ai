@@ -1,9 +1,11 @@
 "use client";
 
+import Container from "@/components/Container";
 import { cn, ParseCash } from "@/lib/utils";
 import clsx from "clsx";
 import Link from "next/link";
 import React from "react";
+import ContainerHeader from "./ContainerHeader";
 
 const fakeData = [
   {
@@ -48,13 +50,8 @@ interface RecentTransactionProps {
 }
 const RecentTransaction: React.FC<RecentTransactionProps> = ({ className }) => {
   return (
-    <div
-      className={cn(
-        "flex h-75 w-full flex-col overflow-hidden rounded-md bg-white p-4 shadow-sm",
-        className,
-      )}
-    >
-      <h1 className="mb-2 text-gray-500">Recent Transaction</h1>
+    <Container className={cn("h-75", className)}>
+      <ContainerHeader>Recent Transaction</ContainerHeader>
       <div className="relative flex flex-1 flex-col gap-2 overflow-auto">
         {fakeData.map((item) => (
           <div
@@ -84,7 +81,7 @@ const RecentTransaction: React.FC<RecentTransactionProps> = ({ className }) => {
           More
         </Link>
       </div>
-    </div>
+    </Container>
   );
 };
 

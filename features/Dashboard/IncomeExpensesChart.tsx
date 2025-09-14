@@ -13,6 +13,8 @@ import {
   Filler, // enables area fill
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import Container from "@/components/Container";
+import ContainerHeader from "./ContainerHeader";
 
 // Register required components
 ChartJS.register(
@@ -66,13 +68,8 @@ const IncomeExpensesChart: React.FC<IncomeExpensesChartProps> = ({
   };
 
   return (
-    <div
-      className={cn(
-        "flex h-75 w-full flex-col rounded-md bg-white p-4 shadow-sm",
-        className,
-      )}
-    >
-      <h1 className="text-gray-500">Income vs Expenses</h1>
+    <Container className={cn("h-75", className)}>
+      <ContainerHeader>Income vs Expenses</ContainerHeader>
       <div className="flex h-full flex-1 items-center justify-center">
         <Line
           style={{ height: "100%" }}
@@ -81,7 +78,7 @@ const IncomeExpensesChart: React.FC<IncomeExpensesChartProps> = ({
           options={options}
         />
       </div>
-    </div>
+    </Container>
   );
 };
 

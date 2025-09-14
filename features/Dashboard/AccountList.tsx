@@ -1,8 +1,10 @@
 "use client";
 
+import Container from "@/components/Container";
 import { cn, ParseCash } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
+import ContainerHeader from "./ContainerHeader";
 
 const fakeData = [
   {
@@ -23,13 +25,8 @@ interface AccountListProps {
 }
 const AccountList: React.FC<AccountListProps> = ({ className }) => {
   return (
-    <div
-      className={cn(
-        "flex h-75 w-full flex-col rounded-md bg-white p-4 shadow-sm",
-        className,
-      )}
-    >
-      <h1 className="mb-2 text-gray-500">Accounts</h1>
+    <Container className={cn("h-75", className)}>
+      <ContainerHeader>Accounts</ContainerHeader>
       <div className="relative flex flex-1 flex-col gap-2 overflow-auto">
         {fakeData.map((item) => (
           <div
@@ -54,7 +51,7 @@ const AccountList: React.FC<AccountListProps> = ({ className }) => {
           More
         </Link>
       </div>
-    </div>
+    </Container>
   );
 };
 

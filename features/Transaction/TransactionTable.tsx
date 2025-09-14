@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Container from "@/components/Container";
 
 const invoices = [
   {
@@ -57,7 +58,7 @@ const invoices = [
 
 const TransactionTable = () => {
   return (
-    <div className="flex h-fit min-h-full w-full flex-col justify-between rounded-md bg-white p-4 shadow-sm">
+    <Container className="h-fit min-h-full">
       <Table className="border-separate border-spacing-y-4">
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
@@ -87,7 +88,7 @@ const TransactionTable = () => {
           </TableRow>
         </TableFooter>
       </Table>
-    </div>
+    </Container>
   );
 };
 

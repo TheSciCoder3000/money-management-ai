@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <div className="relative grid w-full grid-cols-4 gap-4 overscroll-y-auto p-7">
       <OverviewCard
-        className="col-span-4"
+        className="col-span-4 justify-between"
         total={1000}
         expenses={120}
         income={1120}

@@ -2,6 +2,7 @@ import { Wallet } from "lucide-react";
 import { MdOutlineSavings, MdMoneyOff } from "react-icons/md";
 import React from "react";
 import { cn, ParseCash } from "@/lib/utils";
+import Container from "@/components/Container";
 
 interface OverviewProps {
   className?: string;
@@ -34,12 +35,7 @@ const OverviewCard: React.FC<OverviewProps> = ({
   ];
 
   return (
-    <div
-      className={cn(
-        "flex w-full justify-between rounded-md bg-white p-4 shadow-sm",
-        className,
-      )}
-    >
+    <Container className={cn("flex-row", className)}>
       {content.map((Item, indx) => (
         <div key={indx} className="flex gap-2 pr-4">
           <div className="flex aspect-square w-12 items-center justify-center rounded-md bg-gray-100/80 p-2">
@@ -51,7 +47,7 @@ const OverviewCard: React.FC<OverviewProps> = ({
           </div>
         </div>
       ))}
-    </div>
+    </Container>
   );
 };
 

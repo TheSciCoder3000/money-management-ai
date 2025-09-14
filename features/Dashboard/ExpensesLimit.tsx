@@ -14,6 +14,8 @@ import {
 } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
 import { Bar } from "react-chartjs-2";
+import Container from "@/components/Container";
+import ContainerHeader from "./ContainerHeader";
 
 // Register required Chart.js components + plugin
 ChartJS.register(
@@ -76,17 +78,12 @@ const ExpensesLimit: React.FC<ExpensesLimitProps> = ({ className }) => {
     },
   };
   return (
-    <div
-      className={cn(
-        "flex h-75 w-full flex-col rounded-md bg-white p-4 shadow-sm",
-        className,
-      )}
-    >
-      <h1 className="text-gray-500">Expenses</h1>
-      <div className="flex h-full flex-1 items-center justify-center">
+    <Container className={cn("h-75", className)}>
+      <ContainerHeader>Expenses</ContainerHeader>
+      <div className="flex flex-1 items-center justify-center pb-2">
         <Bar data={data} options={options} />
       </div>
-    </div>
+    </Container>
   );
 };
 
