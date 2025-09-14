@@ -6,7 +6,7 @@ import { MdSend } from "react-icons/md";
 
 const Controls = () => {
   return (
-    <div className="sticky bottom-7 left-0 col-span-4 flex h-fit w-full justify-center">
+    <div className="sticky bottom-7 left-[50%] col-span-4 flex h-fit w-fit -translate-x-[50%] justify-center">
       <div className="z-5 flex h-fit w-fit items-center gap-2 rounded-full bg-white p-2 shadow-lg">
         <button className="cursor-pointer rounded-full p-2 hover:bg-gray-100">
           <Plus size={15} />
