@@ -1,11 +1,11 @@
 import React from "react";
 
-function Transacctions() {
+function Transactions() {
   return (
     <div>
-      <h1>Transacctions</h1>
+      <h1>Transactions</h1>
     </div>
   );
 }
 
-export default Transacctions;
+export default Transactions;

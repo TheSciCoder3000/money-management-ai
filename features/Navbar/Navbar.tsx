@@ -1,7 +1,14 @@
 import React from "react";
 import Profile from "./Profile";
 import { Route } from "next";
-import { CreditCard, Home, Settings, Target, Wallet } from "lucide-react";
+import {
+  CreditCard,
+  Home,
+  Settings,
+  Target,
+  Wallet,
+  WalletCards,
+} from "lucide-react";
 import LinkItem from "./LinkItem";
 
 const RoutesData: { label: string; href: Route; icon: typeof Settings }[] = [
@@ -9,6 +16,11 @@ const RoutesData: { label: string; href: Route; icon: typeof Settings }[] = [
     label: "Dashbord",
     href: "/",
     icon: Home,
+  },
+  {
+    label: "Account",
+    href: "/account",
+    icon: WalletCards,
   },
   {
     label: "Transactions",
