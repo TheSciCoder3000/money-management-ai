@@ -66,9 +66,21 @@ const IncomeExpensesChart: React.FC<IncomeExpensesChartProps> = ({
   };
 
   return (
-    <div className={cn("w-full rounded-md bg-white p-4 shadow-sm", className)}>
+    <div
+      className={cn(
+        "flex h-75 w-full flex-col rounded-md bg-white p-4 shadow-sm",
+        className,
+      )}
+    >
       <h1 className="text-gray-500">Income vs Expenses</h1>
-      <Line data={data} options={options} />
+      <div className="flex h-full flex-1 items-center justify-center">
+        <Line
+          style={{ height: "100%" }}
+          className="h-40"
+          data={data}
+          options={options}
+        />
+      </div>
     </div>
   );
 };
