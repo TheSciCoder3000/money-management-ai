@@ -1,7 +1,7 @@
 import { LucideProps } from "lucide-react";
 import { Route } from "next";
-import Link from "next/link";
 import React from "react";
+import NavLink from "./NavLink";
 
 interface LinkItemProps {
   Icon: React.ForwardRefExoticComponent<
@@ -12,13 +12,15 @@ interface LinkItemProps {
 }
 const LinkItem: React.FC<LinkItemProps> = ({ Icon, text, href }) => {
   return (
-    <Link
+    <NavLink
       href={href}
-      className="flex w-full cursor-pointer items-center gap-2 rounded-md p-2 hover:bg-gray-200/70"
+      className="flex w-full cursor-pointer items-center gap-2 rounded-md p-2 text-sm hover:bg-gray-200/70"
+      inactiveClass="text-gray-500"
+      activeClass="text-black"
     >
-      <Icon className="inline" size={15} />
+      <Icon className="inline" size={13} />
       <span>{text}</span>
-    </Link>
+    </NavLink>
   );
 };
 

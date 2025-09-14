@@ -17,12 +17,12 @@ const RoutesData: { label: string; href: Route; icon: typeof Settings }[] = [
   },
   {
     label: "Budget",
-    href: "/",
+    href: "/budget",
     icon: Wallet,
   },
   {
     label: "Goals",
-    href: "/",
+    href: "/goals",
     icon: Target,
   },
 ];
@@ -44,7 +44,7 @@ function Navbar() {
         </div>
 
         <div>
-          <LinkItem href="/" Icon={Settings} text="Settings" />
+          <LinkItem href="/settings" Icon={Settings} text="Settings" />
         </div>
       </div>
     </div>
