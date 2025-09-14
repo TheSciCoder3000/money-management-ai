@@ -1,13 +1,14 @@
 import { cn } from "@/lib/utils";
-import React, { ReactNode } from "react";
+import React from "react";
 
-interface ContainerProps {
-  children: ReactNode | ReactNode[];
-  className?: string;
-}
-const Container: React.FC<ContainerProps> = ({ children, className }) => {
+const Container = ({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"div">) => {
   return (
     <div
+      {...props}
       className={cn(
         "flex w-full flex-col rounded-md bg-white p-4 shadow-sm",
         className,

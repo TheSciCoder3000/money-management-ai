@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Container from "@/components/Container";
+import { cn } from "@/lib/utils";
 
 const invoices = [
   {
@@ -56,9 +57,12 @@ const invoices = [
   },
 ];
 
-const TransactionTable = () => {
+const TransactionTable = ({
+  className,
+  ...props
+}: React.ComponentProps<"div">) => {
   return (
-    <Container className="h-fit min-h-full">
+    <Container className={cn("h-fit min-h-full", className)} {...props}>
       <Table className="border-separate border-spacing-y-4">
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>

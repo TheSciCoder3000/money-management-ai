@@ -17,3 +17,7 @@ export function ParseCash(amount: number) {
     style: "currency",
   });
 }
+
+export function CapitalizeFirst(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
