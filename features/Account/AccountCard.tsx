@@ -16,7 +16,7 @@ const AccountCard: React.FC<AccountCardProps> = ({ name, type, amount }) => {
         <h3 className="text-gray-400">{type}</h3>
       </div>
 
-      <h1 className="text-2xl">$ {ParseCash(amount)}</h1>
+      <h1 className="text-2xl">{ParseCash(amount)}</h1>
     </Container>
   );
 };

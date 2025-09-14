@@ -39,7 +39,7 @@ const AccountList: React.FC<AccountListProps> = ({ className }) => {
             </div>
 
             <div>
-              <p>$ {ParseCash(item.amount)}</p>
+              <p>{ParseCash(item.amount)}</p>
             </div>
           </div>
         ))}

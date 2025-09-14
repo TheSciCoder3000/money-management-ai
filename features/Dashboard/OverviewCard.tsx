@@ -43,7 +43,7 @@ const OverviewCard: React.FC<OverviewProps> = ({
           </div>
           <div>
             <h2 className="text-sm text-gray-400">{Item.label}</h2>
-            <h1 className="text-xl font-semibold">$ {ParseCash(Item.value)}</h1>
+            <h1 className="text-xl font-semibold">{ParseCash(Item.value)}</h1>
           </div>
         </div>
       ))}

@@ -69,7 +69,7 @@ const RecentTransaction: React.FC<RecentTransactionProps> = ({ className }) => {
                 item.type === "income" ? "text-green-500" : "text-red-500",
               )}
             >
-              <p>$ {ParseCash(item.amount)}</p>
+              <p>{ParseCash(item.amount)}</p>
             </div>
           </div>
         ))}
