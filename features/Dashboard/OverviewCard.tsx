@@ -1,7 +1,7 @@
 import { Wallet } from "lucide-react";
 import { MdOutlineSavings, MdMoneyOff } from "react-icons/md";
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn, ParseCash } from "@/lib/utils";
 
 interface OverviewProps {
   className?: string;
@@ -47,7 +47,7 @@ const OverviewCard: React.FC<OverviewProps> = ({
           </div>
           <div>
             <h2 className="text-sm text-gray-400">{Item.label}</h2>
-            <h1 className="text-xl font-semibold">$ {Item.value}</h1>
+            <h1 className="text-xl font-semibold">$ {ParseCash(Item.value)}</h1>
           </div>
         </div>
       ))}
