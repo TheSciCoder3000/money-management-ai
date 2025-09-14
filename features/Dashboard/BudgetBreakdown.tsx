@@ -7,15 +7,13 @@ import { Doughnut } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-interface ExpenditureBreakdownProps {
+interface BudgetBreakdownProps {
   className?: string;
 }
-const ExpenditureBreakdown: React.FC<ExpenditureBreakdownProps> = ({
-  className,
-}) => {
+const BudgetBreakdown: React.FC<BudgetBreakdownProps> = ({ className }) => {
   return (
     <div className={cn("w-full rounded-md bg-white p-4 shadow-sm", className)}>
-      <h1 className="text-gray-500">Expenses Breakdown</h1>
+      <h1 className="text-gray-500">Budget Breakdown</h1>
 
       <Doughnut
         className="p-4"
@@ -39,4 +37,4 @@ const ExpenditureBreakdown: React.FC<ExpenditureBreakdownProps> = ({
   );
 };
 
-export default ExpenditureBreakdown;
+export default BudgetBreakdown;

@@ -1,7 +1,7 @@
 import AccountList from "@/features/Dashboard/AccountList";
-import BudgetLimit from "@/features/Dashboard/BudgetLimit";
+import ExpensesLimit from "@/features/Dashboard/ExpensesLimit";
 import Controls from "@/features/Dashboard/Controls";
-import ExpenditureBreakdown from "@/features/Dashboard/ExpenditureBreakdown";
+import BudgetBreakdown from "@/features/Dashboard/BudgetBreakdown";
 import IncomeExpensesChart from "@/features/Dashboard/IncomeExpensesChart";
 import OverviewCard from "@/features/Dashboard/OverviewCard";
 import RecentTransaction from "@/features/Dashboard/RecentTransaction";
@@ -16,8 +16,8 @@ export default function Home() {
         expenses={120}
         income={1120}
       />
-      <ExpenditureBreakdown />
-      <BudgetLimit className="col-span-2" />
+      <BudgetBreakdown />
+      <ExpensesLimit className="col-span-2" />
       <RecentTransaction />
       <AccountList />
       <IncomeExpensesChart className="col-span-2" />

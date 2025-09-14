@@ -26,10 +26,10 @@ ChartJS.register(
   annotationPlugin,
 );
 
-interface BudgetLimitProps {
+interface ExpensesLimitProps {
   className?: string;
 }
-const BudgetLimit: React.FC<BudgetLimitProps> = ({ className }) => {
+const ExpensesLimit: React.FC<ExpensesLimitProps> = ({ className }) => {
   const data = {
     labels: ["Food", "Games", "Tech"],
     datasets: [
@@ -77,7 +77,7 @@ const BudgetLimit: React.FC<BudgetLimitProps> = ({ className }) => {
   };
   return (
     <div className={cn("w-full rounded-md bg-white p-4 shadow-sm", className)}>
-      <h1 className="text-gray-500">Budget</h1>
+      <h1 className="text-gray-500">Expenses</h1>
       <div className="flex h-full items-center justify-center">
         <Bar data={data} options={options} />
       </div>
@@ -85,4 +85,4 @@ const BudgetLimit: React.FC<BudgetLimitProps> = ({ className }) => {
   );
 };
 
-export default BudgetLimit;
+export default ExpensesLimit;
