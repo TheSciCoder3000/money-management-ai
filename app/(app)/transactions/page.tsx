@@ -1,9 +1,11 @@
+import TransactionTable from "@/features/Transaction/TransactionTable";
 import React from "react";
 
 function Transactions() {
   return (
-    <div>
-      <h1>Transactions</h1>
+    <div className="p-7">
+      <h1 className="mb-8 text-4xl">Transactions</h1>
+      <TransactionTable />
     </div>
   );
 }
