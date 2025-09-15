@@ -5,7 +5,7 @@ import {
   CreditCard,
   Home,
   Settings,
-  Target,
+  // Target,
   Wallet,
   WalletCards,
 } from "lucide-react";
@@ -32,11 +32,11 @@ const RoutesData: { label: string; href: Route; icon: typeof Settings }[] = [
     href: "/budget",
     icon: Wallet,
   },
-  {
-    label: "Goals",
-    href: "/goals",
-    icon: Target,
-  },
+  // {
+  //   label: "Goals",
+  //   href: "/goals",
+  //   icon: Target,
+  // },
 ];
 
 function Navbar() {
