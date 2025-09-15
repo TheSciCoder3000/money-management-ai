@@ -21,3 +21,12 @@ export function ParseCash(amount: number) {
 export function CapitalizeFirst(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export function ParseErrorJson(message: string, status: number) {
+  return Response.json({ message }, { status });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function ParseJson(data: any, status: number) {
+  return Response.json({ data }, { status });
+}
