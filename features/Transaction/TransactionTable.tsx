@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Table,
@@ -11,48 +13,58 @@ import {
 } from "@/components/ui/table";
 import Container from "@/components/Container";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { WalletCards } from "lucide-react";
 
 const invoices = [
   {
     invoice: "INV001",
     paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
+    totalAmount: 1000,
+    paymentMethod: "Cash",
   },
   {
     invoice: "INV002",
     paymentStatus: "Pending",
-    totalAmount: "$150.00",
+    totalAmount: 2000,
     paymentMethod: "PayPal",
   },
   {
     invoice: "INV003",
     paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
+    totalAmount: 10000,
     paymentMethod: "Bank Transfer",
   },
   {
     invoice: "INV004",
     paymentStatus: "Paid",
-    totalAmount: "$450.00",
+    totalAmount: 5000,
     paymentMethod: "Credit Card",
   },
   {
     invoice: "INV005",
     paymentStatus: "Paid",
-    totalAmount: "$550.00",
+    totalAmount: 100,
     paymentMethod: "PayPal",
   },
   {
     invoice: "INV006",
     paymentStatus: "Pending",
-    totalAmount: "$200.00",
+    totalAmount: 100,
     paymentMethod: "Bank Transfer",
   },
   {
     invoice: "INV007",
     paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
+    totalAmount: 700,
     paymentMethod: "Credit Card",
   },
 ];
@@ -63,6 +75,24 @@ const TransactionTable = ({
 }: React.ComponentProps<"div">) => {
   return (
     <Container className={cn("h-fit min-h-full", className)} {...props}>
+      <div className="flex gap-2">
+        <Input />
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant="outline" className="cursor-pointer">
+              <WalletCards className="inline" size={10} /> Account
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end">
+            <DropdownMenuGroup>
+              <DropdownMenuItem>BDO</DropdownMenuItem>
+              <DropdownMenuItem>GoTyme</DropdownMenuItem>
+              <DropdownMenuItem>BPI</DropdownMenuItem>
+              <DropdownMenuItem>GCash</DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <Table className="border-separate border-spacing-y-4">
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>

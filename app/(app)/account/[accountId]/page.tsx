@@ -1,8 +1,8 @@
 import Container from "@/components/Container";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import TransactionTable from "@/components/TransactionTable";
 import AccountDetail from "@/features/Account/Details/AccountDetail";
 import IncomeExpenseChart from "@/features/Account/Details/IncomeExpenseChart";
-import TransactionTable from "@/features/Transaction/TransactionTable";
 import React from "react";
 
 const AccountDetails = () => {
@@ -16,7 +16,7 @@ const AccountDetails = () => {
         </Container>
         <AccountDetail />
 
-        <TransactionTable className="col-span-4" />
+        <TransactionTable className="col-span-4" filterAccount={false} />
       </div>
     </div>
   );

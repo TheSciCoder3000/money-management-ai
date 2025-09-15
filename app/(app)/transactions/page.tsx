@@ -1,4 +1,4 @@
-import TransactionTable from "@/features/Transaction/TransactionTable";
+import TransactionTable from "@/components/TransactionTable";
 import React from "react";
 
 function Transactions() {
