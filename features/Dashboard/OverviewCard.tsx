@@ -1,36 +1,42 @@
+"use client";
+
 import { Wallet } from "lucide-react";
 import { MdOutlineSavings, MdMoneyOff } from "react-icons/md";
 import React from "react";
 import { cn, ParseCash } from "@/lib/utils";
 import Container from "@/components/Container";
+import { useAppSelector } from "@/redux/store";
 
 interface OverviewProps {
   className?: string;
-  total: number;
-  expenses: number;
-  income: number;
 }
-const OverviewCard: React.FC<OverviewProps> = ({
-  total,
-  expenses,
-  income,
-  className,
-}) => {
+const OverviewCard: React.FC<OverviewProps> = ({ className }) => {
+  const { accounts, loading } = useAppSelector((state) => state.account);
+
   const content = [
     {
       label: "Total Balance",
       icon: Wallet,
-      value: total,
+      value:
+        loading === "pending"
+          ? null
+          : accounts.reduce((total, acc) => total + acc.balance, 0),
     },
     {
       label: "Income",
       icon: MdOutlineSavings,
-      value: income,
+      value:
+        loading === "pending"
+          ? null
+          : accounts.reduce((total, acc) => total + acc.income, 0),
     },
     {
       label: "Expenses",
       icon: MdMoneyOff,
-      value: expenses,
+      value:
+        loading === "pending"
+          ? null
+          : accounts.reduce((total, acc) => total + acc.expenses, 0),
     },
   ];
 
