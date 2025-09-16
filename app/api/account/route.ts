@@ -37,7 +37,10 @@ export async function POST(request: Request) {
     .select<`*`, IAccountDb>("*")
     .single();
 
-  if (error) ParseErrorJson("insert error", 500);
+  if (error) {
+    console.error(`Error: ${error.message}`);
+    return ParseErrorJson("insert error", 500);
+  }
 
   return ParseJson(data, 200);
 }

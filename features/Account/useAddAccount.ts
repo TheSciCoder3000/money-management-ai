@@ -1,6 +1,7 @@
 import { useUser } from "@/components/UserProvider";
-import { addAccount } from "@/redux/account/AccountThunk";
+import { addAccount, fetchAccounts } from "@/redux/account/AccountThunk";
 import { useAppDispatch } from "@/redux/store";
+import { fetchTransactons } from "@/redux/transaction/TransactionThunk";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -25,7 +26,10 @@ const useAddAccount = () => {
 
   async function onSubmit(value: yup.InferType<typeof formSchema>) {
     try {
-      dispatch(addAccount({ token: session?.access_token, value }));
+      dispatch(addAccount({ token: session?.access_token, value })).then(() => {
+        dispatch(fetchAccounts());
+        dispatch(fetchTransactons());
+      });
       setOpen(false);
       form.reset();
     } catch (e) {

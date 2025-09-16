@@ -6,7 +6,8 @@ export async function GET(request: Request) {
 
   const { data, error } = await supabase
     .from("transaction")
-    .select<`*`, ITransactionDb>("*");
+    .select<`*`, ITransactionDb>("*")
+    .order("created_at", { ascending: false });
 
   if (error) return ParseErrorJson(error.message, 500);
 
