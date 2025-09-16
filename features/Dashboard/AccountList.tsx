@@ -5,30 +5,18 @@ import { cn, ParseCash } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 import ContainerHeader from "./ContainerHeader";
+import { useAppSelector } from "@/redux/store";
 
-const fakeData = [
-  {
-    id: "0",
-    name: "Wallet",
-    type: "Cash",
-    amount: 5000,
-  },
-  {
-    id: "1",
-    name: "BDO",
-    type: "Bank",
-    amount: 10000,
-  },
-];
 interface AccountListProps {
   className?: string;
 }
 const AccountList: React.FC<AccountListProps> = ({ className }) => {
+  const { accounts } = useAppSelector((state) => state.account);
   return (
     <Container className={cn("h-75", className)}>
       <ContainerHeader>Accounts</ContainerHeader>
       <div className="relative flex flex-1 flex-col gap-2 overflow-auto">
-        {fakeData.map((item) => (
+        {accounts.map((item) => (
           <div
             key={item.id}
             className="flex w-full items-center justify-between"
@@ -39,7 +27,7 @@ const AccountList: React.FC<AccountListProps> = ({ className }) => {
             </div>
 
             <div>
-              <p>{ParseCash(item.amount)}</p>
+              <p>{ParseCash(item.balance)}</p>
             </div>
           </div>
         ))}
