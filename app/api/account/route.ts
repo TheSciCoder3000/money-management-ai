@@ -4,7 +4,9 @@ import { ParseErrorJson, ParseJson } from "@/lib/utils";
 export async function GET(request: Request) {
   const supabase = await GetAuthenticatedClient(request);
 
-  const { data, error } = await supabase.from("account").select("*");
+  const { data, error } = await supabase
+    .from("account")
+    .select<`*`, IAccountDb>("*");
 
   if (error) return ParseErrorJson(error.message, 500);
 

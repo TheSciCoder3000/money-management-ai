@@ -1,4 +1,6 @@
 import { useUser } from "@/components/UserProvider";
+import { addAccount } from "@/redux/account/AccountThunk";
+import { useAppDispatch } from "@/redux/store";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -13,7 +15,8 @@ const formSchema = yup.object({
   expenses: yup.number().min(0).required(),
 });
 
-const useAddAccount = (onAdd?: (item: IAccountDb) => void) => {
+const useAddAccount = () => {
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const { session } = useUser();
   const form = useForm({
@@ -22,23 +25,9 @@ const useAddAccount = (onAdd?: (item: IAccountDb) => void) => {
 
   async function onSubmit(value: yup.InferType<typeof formSchema>) {
     try {
-      if (!session) throw Error("Invalid session");
-      const res = await fetch("/api/account", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify(value),
-      });
-
-      if (res.status === 200) {
-        const { data } = await res.json();
-        console.log(data);
-        if (onAdd) onAdd(data);
-        setOpen(false);
-        toast.success("Account Created Successfuly");
-      }
+      dispatch(addAccount({ token: session?.access_token, value }));
+      setOpen(false);
+      form.reset();
     } catch (e) {
       if (e instanceof Error) toast.error(e.message);
     }

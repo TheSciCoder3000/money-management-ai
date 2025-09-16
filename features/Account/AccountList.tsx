@@ -1,20 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import AccountCard from "./AccountCard";
 import AddAccount from "./AddAccount";
+import { useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "@/redux/store";
+import { fetchAccounts } from "@/redux/account/AccountThunk";
 
-interface AccountListProps {
-  accounts: IAccountDb[];
-}
-const AccountList: React.FC<AccountListProps> = ({ accounts }) => {
-  const [accountState, setAccountSTate] = useState(accounts);
+const AccountList = () => {
+  const { accounts, loading } = useSelector(
+    (state: RootState) => state.account,
+  );
+  const dispatch = useAppDispatch();
 
-  console.log(accountState);
+  useEffect(() => {
+    dispatch(fetchAccounts());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      {accountState.map((item) => (
+      {accounts.map((item) => (
         <AccountCard
           key={item.id}
           id={item.id}
@@ -23,9 +29,7 @@ const AccountList: React.FC<AccountListProps> = ({ accounts }) => {
           amount={item.balance}
         ></AccountCard>
       ))}
-      <AddAccount
-        onAdd={(item) => setAccountSTate((state) => [...state, item])}
-      />
+      {loading !== "pending" && <AddAccount />}
     </div>
   );
 };
