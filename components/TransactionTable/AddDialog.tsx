@@ -34,6 +34,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { addTransactons } from "@/redux/transaction/TransactionThunk";
 import { useUser } from "../UserProvider";
 import clsx from "clsx";
+import { fetchAccounts } from "@/redux/account/AccountThunk";
 
 const formSchema = yup.object({
   note: yup.string().required(),
@@ -67,7 +68,9 @@ const AddDialog = () => {
           note: values.note,
         },
       }),
-    );
+    ).then(() => {
+      dispatch(fetchAccounts());
+    });
     form.reset();
     setOpen(false);
   };
