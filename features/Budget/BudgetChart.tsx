@@ -1,0 +1,35 @@
+"use client";
+
+import Container from "@/components/Container";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+import React from "react";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const BudgetChart = () => {
+  return (
+    <Container className="flex h-90 items-center">
+      <Doughnut
+        className="p-4"
+        data={{
+          labels: ["Food", "Games", "Tech"],
+          datasets: [
+            {
+              label: "My First Dataset",
+              data: [300, 50, 100],
+              backgroundColor: [
+                "rgb(255, 99, 132)",
+                "rgb(54, 162, 235)",
+                "rgb(255, 205, 86)",
+              ],
+              hoverOffset: 4,
+            },
+          ],
+        }}
+      />
+    </Container>
+  );
+};
+
+export default BudgetChart;
