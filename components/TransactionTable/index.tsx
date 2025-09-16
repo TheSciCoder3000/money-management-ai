@@ -9,6 +9,7 @@ import AccountSelect from "./AccountSelect";
 import MainTable from "./MainTable";
 import { Button } from "../ui/button";
 import { RefreshCw } from "lucide-react";
+import AddDialog from "./AddDialog";
 
 const accounts: Account[] = [
   { id: "acc-1", name: "Cash" },
@@ -144,6 +145,7 @@ const TransactionTable = ({
   return (
     <Container className={cn("h-fit min-h-full", className)} {...props}>
       <div className="flex gap-2">
+        <AddDialog />
         <Button
           variant="outline"
           onClick={handleRefresh}
@@ -151,7 +153,10 @@ const TransactionTable = ({
         >
           <RefreshCw />
         </Button>
-        <Input onChange={(e) => setQuery(e.target.value)} />
+        <Input
+          placeholder="Filter By..."
+          onChange={(e) => setQuery(e.target.value)}
+        />
         {filterAccount && (
           <AccountSelect onChange={setAccountId} items={accounts} />
         )}
