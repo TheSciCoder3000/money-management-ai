@@ -13,7 +13,7 @@ const formSchema = yup.object({
   expenses: yup.number().min(0).required(),
 });
 
-const useAddAccount = () => {
+const useAddAccount = (onAdd?: (item: IAccountDb) => void) => {
   const [open, setOpen] = useState(false);
   const { session } = useUser();
   const form = useForm({
@@ -33,6 +33,9 @@ const useAddAccount = () => {
       });
 
       if (res.status === 200) {
+        const { data } = await res.json();
+        console.log(data);
+        if (onAdd) onAdd(data);
         setOpen(false);
         toast.success("Account Created Successfuly");
       }

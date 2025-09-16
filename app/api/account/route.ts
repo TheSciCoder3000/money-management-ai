@@ -1,4 +1,4 @@
-import { GetAuthenticatedClient, GetUser } from "@/lib/supabase/util";
+import { GetAuthenticatedClient, GetUser } from "@/lib/supabase/utils";
 import { ParseErrorJson, ParseJson } from "@/lib/utils";
 
 export async function GET(request: Request) {
@@ -22,16 +22,20 @@ export async function POST(request: Request) {
   const supabase = await GetAuthenticatedClient(request);
   const user = await GetUser(request);
 
-  const data = (await request.json()) as PostBodySchema;
+  const bodyData = (await request.json()) as PostBodySchema;
 
   const accountData = {
-    ...data,
+    ...bodyData,
     user_id: user.id,
   };
 
-  const { error } = await supabase.from("account").insert(accountData);
+  const { data, error } = await supabase
+    .from("account")
+    .insert(accountData)
+    .select<`*`, IAccountDb>("*")
+    .single();
 
   if (error) ParseErrorJson("insert error", 500);
 
-  return ParseJson({ message: "success" }, 200);
+  return ParseJson(data, 200);
 }

@@ -34,8 +34,11 @@ import useAddAccount from "./useAddAccount";
 
 const accountTypes = ["Cash", "Digital Bank", "Bank", "Credit"];
 
-const AddAccount = () => {
-  const { form, onSubmit, open, setOpen } = useAddAccount();
+interface AddAccountProps {
+  onAdd?: (item: IAccountDb) => void;
+}
+const AddAccount: React.FC<AddAccountProps> = ({ onAdd }) => {
+  const { form, onSubmit, open, setOpen } = useAddAccount(onAdd);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

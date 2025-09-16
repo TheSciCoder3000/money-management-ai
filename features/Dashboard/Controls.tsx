@@ -9,7 +9,8 @@ const Controls = () => {
   const [prompt, setPrompt] = useState("");
   const [sending, setSending] = useState(false);
 
-  const handlePromptSubmit = async () => {
+  const handlePromptSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setSending(true);
 
     try {
@@ -22,8 +23,14 @@ const Controls = () => {
       });
 
       if (res.status === 200) {
-        const { message } = (await res.json()) as { message: string };
-        toast(message);
+        const { data } = (await res.json()) as {
+          data: AITransactionResponse | null;
+        };
+        toast(
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          </pre>,
+        );
         setPrompt("");
       }
     } catch (e) {

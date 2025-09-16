@@ -1,13 +1,16 @@
 import AccountList from "@/features/Account/AccountList";
+import { GetAccounts } from "@/lib/supabase/account";
 import React from "react";
 
-const Account = () => {
+async function Account() {
+  const accounts = await GetAccounts();
+
   return (
     <div className="p-7">
       <h1 className="mb-8 text-4xl">Account</h1>
-      <AccountList />
+      <AccountList accounts={accounts} />
     </div>
   );
-};
+}
 
 export default Account;
