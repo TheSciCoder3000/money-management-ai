@@ -27,3 +27,14 @@ interface IAccountDb {
   income: number;
   expenses: number;
 }
+
+interface ITransactionDb {
+  id: string;
+  created_at: string;
+  account_id: string;
+  user_id: string;
+  value: number;
+  category: string;
+  type: "income" | "expenses";
+  note: string;
+}
