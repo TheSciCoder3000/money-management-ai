@@ -11,13 +11,6 @@ import { Button } from "../ui/button";
 import { RefreshCw } from "lucide-react";
 import AddDialog from "./AddDialog";
 
-const accounts: Account[] = [
-  { id: "acc-1", name: "Cash" },
-  { id: "acc-2", name: "GoTyme" },
-  { id: "acc-3", name: "BPI" },
-  { id: "acc-4", name: "GCash" },
-];
-
 interface TransactionTableProps {
   filterAccount?: boolean;
   items: TableDataSchema[];
@@ -58,9 +51,7 @@ const TransactionTable = ({
           placeholder="Filter By..."
           onChange={(e) => setQuery(e.target.value)}
         />
-        {filterAccount && (
-          <AccountSelect onChange={setAccountId} items={accounts} />
-        )}
+        {filterAccount && <AccountSelect onChange={setAccountId} />}
       </div>
       <MainTable items={items} filter={customFilter} />
     </Container>

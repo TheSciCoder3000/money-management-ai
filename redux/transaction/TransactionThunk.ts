@@ -25,3 +25,29 @@ export const fetchTransactons = createAsyncThunk(
     return data;
   },
 );
+
+interface AddArgs {
+  token: string | undefined;
+  value: {
+    account_id: string;
+    value: number;
+    category: string;
+    type: TransactionType;
+    note: string;
+  };
+}
+export const addTransactons = createAsyncThunk(
+  "transactions/addTransactons",
+  async ({ token, value }: AddArgs) => {
+    const res = await fetch("/api/transaction", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "applicaton/json",
+      },
+      body: JSON.stringify(value),
+    });
+    const { data } = (await res.json()) as { data: ITransactionDb };
+    return data;
+  },
+);

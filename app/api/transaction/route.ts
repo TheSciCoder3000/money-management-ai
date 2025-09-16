@@ -25,12 +25,15 @@ export async function POST(request: Request) {
   };
 
   const { data, error } = await supabase
-    .from("account")
+    .from("transaction")
     .insert(accountData)
     .select<`*`, ITransactionDb>("*")
     .single();
 
-  if (error) ParseErrorJson("insert error", 500);
+  if (error) {
+    console.error(`Error: ${error.message}`);
+    return ParseErrorJson("insert error", 500);
+  }
 
   return ParseJson(data, 200);
 }

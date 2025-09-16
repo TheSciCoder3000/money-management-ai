@@ -28,12 +28,15 @@ import {
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
 import { Resolver, useForm } from "react-hook-form";
-import { useAppSelector } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { addTransactons } from "@/redux/transaction/TransactionThunk";
+import { useUser } from "../UserProvider";
+import clsx from "clsx";
 
 const formSchema = yup.object({
-  note: yup.string().optional(),
+  note: yup.string().required(),
   category: yup.string().required(),
   account: yup.string().required(),
   type: yup.string().required(),
@@ -44,29 +47,48 @@ type formData = yup.InferType<typeof formSchema>;
 
 const AddDialog = () => {
   const { accounts } = useAppSelector((state) => state.account);
+  const { loading } = useAppSelector((state) => state.transaction);
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const form = useForm<formData>({
     resolver: yupResolver(formSchema) as Resolver<formData>,
   });
-
-  const handleAddTransaction = () => {};
+  const { session } = useUser();
 
   const onSubmit = (values: formData) => {
-    console.log(values);
+    dispatch(
+      addTransactons({
+        token: session?.access_token,
+        value: {
+          account_id: values.account,
+          value: values.amount,
+          category: values.category,
+          type: values.type as TransactionType,
+          note: values.note,
+        },
+      }),
+    );
     form.reset();
     setOpen(false);
   };
 
+  const handleOpen = (state: boolean) => {
+    if (loading === "pending") setOpen(false);
+    else setOpen(state);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button
-          variant="default"
-          onClick={handleAddTransaction}
+    <Dialog open={open} onOpenChange={handleOpen}>
+      <DialogTrigger
+        disabled={loading === "pending"}
+        className="flex aspect-square w-10 cursor-pointer items-center justify-center rounded-full hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+      >
+        {/* <Button
+          variant={loading === "pending" ? "ghost" : "default"}
           className="cursor-pointer"
         >
-          <Plus className="stroke-3 font-bold" />
-        </Button>
+        </Button> */}
+        <Plus className={clsx("stroke-3")} size={15} />
       </DialogTrigger>
       <DialogContent>
         <Form {...form}>
@@ -159,7 +181,7 @@ const AddDialog = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {["income", "expenses"].map((item) => (
+                            {["income", "expenses", "transfer"].map((item) => (
                               <SelectItem key={item} value={item}>
                                 {item}
                               </SelectItem>

@@ -35,6 +35,8 @@ interface ITransactionDb {
   user_id: string;
   value: number;
   category: string;
-  type: "income" | "expenses";
+  type: TransactionType;
   note: string;
 }
+
+type TransactionType = "income" | "expenses" | "transfer";

@@ -10,12 +10,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAppSelector } from "@/redux/store";
 
 interface AccountSelectProps {
-  items: { id: string; name: string }[];
   onChange?: (value: string | null) => void;
 }
-const AccountSelect: React.FC<AccountSelectProps> = ({ items, onChange }) => {
+const AccountSelect: React.FC<AccountSelectProps> = ({ onChange }) => {
+  const { accounts } = useAppSelector((state) => state.account);
+
   return (
     <Select
       onValueChange={(value) =>
@@ -30,7 +32,7 @@ const AccountSelect: React.FC<AccountSelectProps> = ({ items, onChange }) => {
         <SelectGroup>
           <SelectLabel>Accounts</SelectLabel>
           <SelectItem value="all">All Accounts</SelectItem>
-          {items.map((item) => (
+          {accounts.map((item) => (
             <SelectItem key={item.id} value={item.id}>
               {item.name}
             </SelectItem>
