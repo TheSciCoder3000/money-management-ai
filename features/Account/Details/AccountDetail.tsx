@@ -6,24 +6,25 @@ import DetailRow from "./DetailRow";
 
 const AccountDetail = ({
   className,
+  account,
   ...props
-}: React.ComponentProps<"div">) => {
+}: React.ComponentProps<"div"> & { account: IAccountDb }) => {
   return (
     <Container {...props} className={cn("", className)}>
       <ContainerHeader>Details</ContainerHeader>
       <div className="mt-4 flex flex-col gap-2">
-        <DetailRow title="Name" value="GoTyme" />
-        <DetailRow title="Type" value="Digital" />
+        <DetailRow title="Name" value={account.name} />
+        <DetailRow title="Type" value={account.type} />
         <DetailRow title="Account No." value="09954289231" />
         <DetailRow
           className="text-green-600"
           title="Current Balance"
-          value={ParseCash(10000)}
+          value={ParseCash(account.balance)}
         />
         <DetailRow
           className="text-red-400"
           title="Total Expenses"
-          value={ParseCash(1000)}
+          value={ParseCash(account.expenses)}
         />
       </div>
     </Container>
