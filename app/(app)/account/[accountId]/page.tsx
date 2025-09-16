@@ -20,7 +20,11 @@ async function AccountDetails({ params }: PageProps<"/account/[accountId]">) {
         </Container>
         <AccountDetail account={account} />
 
-        <TransactionTable className="col-span-4" filterAccount={false} />
+        <TransactionTable
+          items={[]}
+          className="col-span-4"
+          filterAccount={false}
+        />
       </div>
     </div>
   );

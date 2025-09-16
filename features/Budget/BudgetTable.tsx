@@ -4,7 +4,7 @@ import React from "react";
 const BudgetTable = () => {
   return (
     <div className="col-span-2">
-      <TransactionTable />
+      <TransactionTable items={[]} />
     </div>
   );
 };
