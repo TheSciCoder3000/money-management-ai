@@ -51,3 +51,24 @@ export const addTransactons = createAsyncThunk(
     return data;
   },
 );
+
+interface UpdateArgs {
+  token: string | undefined;
+  value: Partial<ITransactionDb>;
+}
+export const updateTransaction = createAsyncThunk(
+  "transactions/updateTransaction",
+  async ({ token, value }: UpdateArgs) => {
+    const res = await fetch("/api/transaction", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "applicaton/json",
+      },
+      body: JSON.stringify(value),
+    });
+
+    const { data } = (await res.json()) as { data: ITransactionDb };
+    return data;
+  },
+);

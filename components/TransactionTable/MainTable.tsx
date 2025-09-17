@@ -10,6 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ParseCash } from "@/lib/utils";
+import { Trash2 } from "lucide-react";
+import EditDialog from "./EditDialog";
 
 interface MainTableProps {
   items: TableDataSchema[];
@@ -24,17 +26,20 @@ const MainTable: React.FC<MainTableProps> = ({
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
         <TableRow className="hover:bg-transparent">
-          <TableHead className="w-[100px]">Invoice</TableHead>
+          <TableHead className="max-w-[50px]">Invoice</TableHead>
           <TableHead>Account</TableHead>
           <TableHead>Method</TableHead>
           <TableHead>Note</TableHead>
           <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="text-right">Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {items.filter(filter).map((invoice) => (
           <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
+            <TableCell className="max-w-[50px] overflow-hidden font-medium">
+              {invoice.invoice}
+            </TableCell>
             <TableCell className="min-w-fit">{invoice.account.name}</TableCell>
             <TableCell className="min-w-fit">{invoice.paymentMethod}</TableCell>
             <TableCell className="w-auto text-gray-400">
@@ -42,6 +47,20 @@ const MainTable: React.FC<MainTableProps> = ({
             </TableCell>
             <TableCell className="text-right">
               {ParseCash(invoice.amount)}
+            </TableCell>
+            <TableCell className="flex justify-end">
+              <div className="flex w-fit justify-between">
+                <EditDialog
+                  transaction_id={invoice.invoice}
+                  paymentMethod="Cash"
+                  account_id={invoice.account.id}
+                  amount={invoice.amount}
+                  note={invoice.note}
+                />
+                <button className="cursor-pointer rounded-md p-2 hover:bg-gray-200">
+                  <Trash2 size={15} />
+                </button>
+              </div>
             </TableCell>
           </TableRow>
         ))}
@@ -56,6 +75,7 @@ const MainTable: React.FC<MainTableProps> = ({
                 .reduce((prev, item) => prev + item.amount, 0),
             )}
           </TableCell>
+          <TableCell />
         </TableRow>
       </TableFooter>
     </Table>

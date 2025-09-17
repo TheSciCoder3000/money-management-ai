@@ -38,3 +38,21 @@ export async function POST(request: Request) {
 
   return ParseJson(data, 200);
 }
+
+export async function PUT(request: Request) {
+  const supabase = await GetAuthenticatedClient(request);
+  const bodyData = (await request.json()) as Partial<ITransactionDb>;
+
+  if (!bodyData.id) return ParseErrorJson("error: no transaction id", 500);
+
+  const { data, error } = await supabase
+    .from("transaction")
+    .update(bodyData)
+    .eq("id", bodyData.id)
+    .select()
+    .single();
+
+  if (error) return ParseErrorJson("failed to update", 500);
+
+  return ParseJson(data, 200);
+}

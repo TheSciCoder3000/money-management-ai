@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addTransactons, fetchTransactons } from "./TransactionThunk";
+import {
+  addTransactons,
+  fetchTransactons,
+  updateTransaction,
+} from "./TransactionThunk";
 
 interface TransactionSlice {
   transactions: ITransactionDb[];
@@ -35,7 +39,22 @@ const transactionSlice = createSlice({
     });
     builder.addCase(addTransactons.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      state.transactions.push(action.payload);
+      state.transactions = [action.payload, ...state.transactions];
+    });
+
+    builder.addCase(updateTransaction.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(updateTransaction.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(updateTransaction.fulfilled, (state, action) => {
+      const updatedTransaction = action.payload;
+      state.loading = "succeeded";
+      state.transactions = state.transactions.map((trans) => {
+        if (trans.id === updatedTransaction.id) return updatedTransaction;
+        return trans;
+      });
     });
   },
 });
