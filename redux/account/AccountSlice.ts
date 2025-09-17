@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addAccount, fetchAccounts } from "./AccountThunk";
+import { addAccount, deleteAccount, fetchAccounts } from "./AccountThunk";
 
 interface AccountState {
   accounts: IAccountDb[];
@@ -36,6 +36,19 @@ const accountSlice = createSlice({
     builder.addCase(addAccount.fulfilled, (state, action) => {
       state.loading = "succeeded";
       state.accounts.push(action.payload);
+    });
+
+    builder.addCase(deleteAccount.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(deleteAccount.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(deleteAccount.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.accounts = state.accounts.filter(
+        (acc) => acc.id !== action.payload.id,
+      );
     });
   },
 });

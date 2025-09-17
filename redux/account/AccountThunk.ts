@@ -55,3 +55,30 @@ export const addAccount = createAsyncThunk(
     return data as IAccountDb;
   },
 );
+
+interface DeleteArgs {
+  token: string;
+  value: {
+    id: string;
+  };
+}
+export const deleteAccount = createAsyncThunk(
+  "accounts/deleteAccount",
+  async ({ token, value }: DeleteArgs) => {
+    if (!token) throw Error("invalid token");
+
+    const res = await fetch("/api/account", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(value),
+    });
+
+    if (res.status !== 200) throw Error("delete error");
+    const { data } = await res.json();
+
+    return data as { id: string };
+  },
+);

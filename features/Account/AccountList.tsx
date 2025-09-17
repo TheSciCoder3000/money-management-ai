@@ -14,13 +14,7 @@ const AccountList = () => {
   return (
     <div className="grid grid-cols-3 gap-4">
       {accounts.map((item) => (
-        <AccountCard
-          key={item.id}
-          id={item.id}
-          name={item.name}
-          type={item.type}
-          amount={item.income - item.expenses}
-        ></AccountCard>
+        <AccountCard key={item.id} account={item}></AccountCard>
       ))}
       {loading !== "pending" && <AddAccount />}
     </div>

@@ -47,3 +47,24 @@ export async function POST(request: Request) {
 
   return ParseJson(data, 200);
 }
+
+interface DeleteBodySchema {
+  id: string;
+}
+export async function DELETE(request: Request) {
+  const supabase = await GetAuthenticatedClient(request);
+
+  const bodyData = (await request.json()) as DeleteBodySchema;
+
+  const { error } = await supabase
+    .from("account")
+    .delete()
+    .eq("id", bodyData.id);
+
+  if (error) {
+    console.error(`Error: ${error.message}`);
+    return ParseErrorJson("delete error", 500);
+  }
+
+  return ParseJson(bodyData, 200);
+}
