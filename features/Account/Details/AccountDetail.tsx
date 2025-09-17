@@ -19,7 +19,7 @@ const AccountDetail = ({
         <DetailRow
           className="text-green-600"
           title="Current Balance"
-          value={ParseCash(account.balance)}
+          value={ParseCash(account.income - account.expenses)}
         />
         <DetailRow
           className="text-red-400"

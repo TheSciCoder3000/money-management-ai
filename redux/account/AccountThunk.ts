@@ -31,7 +31,6 @@ interface AddArgs {
   value: {
     type: string;
     name: string;
-    balance: number;
     income: number;
     expenses: number;
   };

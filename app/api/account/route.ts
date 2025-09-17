@@ -16,7 +16,6 @@ export async function GET(request: Request) {
 interface PostBodySchema {
   name: string;
   type: string;
-  balance: number;
   income: number;
   expenses: number;
 }
@@ -32,10 +31,14 @@ export async function POST(request: Request) {
   };
 
   const { data, error } = await supabase
-    .from("account")
-    .insert(accountData)
-    .select<`*`, IAccountDb>("*")
-    .single();
+    .rpc("add_account_and_transaction", {
+      name: accountData.name,
+      user_id: accountData.user_id,
+      income: accountData.income,
+      expenses: accountData.expenses,
+      type: accountData.type,
+    })
+    .single<IAccountDb>();
 
   if (error) {
     console.error(`Error: ${error.message}`);

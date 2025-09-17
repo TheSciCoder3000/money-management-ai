@@ -23,7 +23,6 @@ interface IAccountDb {
   type: string;
   name: string;
   user_id: string;
-  balance: number;
   income: number;
   expenses: number;
 }

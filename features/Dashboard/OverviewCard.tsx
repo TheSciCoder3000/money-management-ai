@@ -20,7 +20,10 @@ const OverviewCard: React.FC<OverviewProps> = ({ className }) => {
       value:
         loading === "pending"
           ? null
-          : accounts.reduce((total, acc) => total + acc.balance, 0),
+          : accounts.reduce(
+              (total, acc) => total + acc.income - acc.expenses,
+              0,
+            ),
     },
     {
       label: "Income",

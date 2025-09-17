@@ -14,6 +14,7 @@ import { Trash2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { deleteTransaction } from "@/redux/transaction/TransactionThunk";
 import { useUser } from "../UserProvider";
+import { fetchAccounts } from "@/redux/account/AccountThunk";
 
 interface DeleteDialogProps {
   id: string;
@@ -26,7 +27,9 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ id }) => {
 
   const onDelete = () => {
     if (!session) return;
-    dispatch(deleteTransaction({ token: session.access_token, value: { id } }));
+    dispatch(
+      deleteTransaction({ token: session.access_token, value: { id } }),
+    ).then(() => dispatch(fetchAccounts()));
     setOpen(false);
   };
 

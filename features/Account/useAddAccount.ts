@@ -11,7 +11,6 @@ import * as yup from "yup";
 const formSchema = yup.object({
   name: yup.string().required("Please enter Account name"),
   type: yup.string().required(),
-  balance: yup.number().min(0).required(),
   income: yup.number().min(0).required(),
   expenses: yup.number().min(0).required(),
 });

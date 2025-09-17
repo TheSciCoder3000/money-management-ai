@@ -19,7 +19,7 @@ const AccountList = () => {
           id={item.id}
           name={item.name}
           type={item.type}
-          amount={item.balance}
+          amount={item.income - item.expenses}
         ></AccountCard>
       ))}
       {loading !== "pending" && <AddAccount />}
