@@ -37,6 +37,7 @@ import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { updateTransaction } from "@/redux/transaction/TransactionThunk";
 import { useUser } from "../UserProvider";
+import { fetchAccounts } from "@/redux/account/AccountThunk";
 
 const formSchema = yup.object({
   account_id: yup.string().required(),
@@ -76,7 +77,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
           value: values.amount,
         },
       }),
-    );
+    ).then(() => dispatch(fetchAccounts()));
     setOpen(false);
   }
 
