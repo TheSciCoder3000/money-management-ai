@@ -10,8 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ParseCash } from "@/lib/utils";
-import { Trash2 } from "lucide-react";
 import EditDialog from "./EditDialog";
+import DeleteDialog from "./DeleteDialog";
 
 interface MainTableProps {
   items: TableDataSchema[];
@@ -58,7 +58,7 @@ const MainTable: React.FC<MainTableProps> = ({
                   note={invoice.note}
                 />
                 <button className="cursor-pointer rounded-md p-2 hover:bg-gray-200">
-                  <Trash2 size={15} />
+                  <DeleteDialog id={invoice.invoice} />
                 </button>
               </div>
             </TableCell>

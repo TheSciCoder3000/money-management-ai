@@ -72,3 +72,26 @@ export const updateTransaction = createAsyncThunk(
     return data;
   },
 );
+
+interface deleteArgs {
+  token: string | undefined;
+  value: {
+    id: string;
+  };
+}
+export const deleteTransaction = createAsyncThunk(
+  "transactions/deleteTransaction",
+  async ({ token, value }: deleteArgs) => {
+    const res = await fetch("/api/transaction", {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "applicaton/json",
+      },
+      body: JSON.stringify(value),
+    });
+
+    const { data } = (await res.json()) as { data: { id: string } };
+    return data;
+  },
+);

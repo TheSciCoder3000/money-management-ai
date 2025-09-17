@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   addTransactons,
+  deleteTransaction,
   fetchTransactons,
   updateTransaction,
 } from "./TransactionThunk";
@@ -55,6 +56,20 @@ const transactionSlice = createSlice({
         if (trans.id === updatedTransaction.id) return updatedTransaction;
         return trans;
       });
+    });
+
+    builder.addCase(deleteTransaction.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(deleteTransaction.rejected, (state) => {
+      state.loading = "failed";
+    });
+    builder.addCase(deleteTransaction.fulfilled, (state, action) => {
+      const deletedItem = action.payload;
+      state.loading = "succeeded";
+      state.transactions = state.transactions.filter(
+        (trans) => deletedItem.id !== trans.id,
+      );
     });
   },
 });

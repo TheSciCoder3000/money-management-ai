@@ -56,3 +56,19 @@ export async function PUT(request: Request) {
 
   return ParseJson(data, 200);
 }
+
+export async function DELETE(request: Request) {
+  const supabase = await GetAuthenticatedClient(request);
+  const bodyData = (await request.json()) as Partial<ITransactionDb>;
+
+  if (!bodyData.id) return ParseErrorJson("error: no transaction id", 500);
+
+  const { error } = await supabase
+    .from("transaction")
+    .delete()
+    .eq("id", bodyData.id);
+
+  if (error) return ParseErrorJson("failed to delete", 500);
+
+  return ParseJson({ id: bodyData.id }, 200);
+}
