@@ -32,7 +32,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { addTransactons } from "@/redux/transaction/TransactionThunk";
-import { useUser } from "../UserProvider";
+import { useUser } from "../../components/UserProvider";
 import clsx from "clsx";
 import { fetchAccounts } from "@/redux/account/AccountThunk";
 

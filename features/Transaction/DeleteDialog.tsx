@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { deleteTransaction } from "@/redux/transaction/TransactionThunk";
-import { useUser } from "../UserProvider";
+import { useUser } from "../../components/UserProvider";
 import { fetchAccounts } from "@/redux/account/AccountThunk";
 
 interface DeleteDialogProps {

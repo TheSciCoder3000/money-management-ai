@@ -1,45 +1,57 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 
-import Container from "@/components/Container";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import AccountSelect from "./AccountSelect";
 import MainTable from "./MainTable";
-import { Button } from "../ui/button";
-import { RefreshCw } from "lucide-react";
-import AddDialog from "./AddDialog";
+import AccountSelect from "./AccountSelect";
+import Container from "@/components/Container";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { TableCell } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
-interface TransactionTableProps {
+import { RefreshCw } from "lucide-react";
+interface TransactionTableProps<T extends { id: string }> {
   filterAccount?: boolean;
-  items: TableDataSchema[];
+  items: T[];
+  Filter: (item: T, query: string, accountId: string | null) => boolean;
   onRefresh?: () => void;
+  render: (
+    indx: number,
+    value: T[keyof T],
+    key: keyof T,
+    Cell: typeof TableCell,
+  ) => ReactNode;
+  AddDialog?: ReactNode;
+  EditDialog?: (item: T) => ReactNode;
+  DeleteDialog?: (item: T) => ReactNode;
+  Footer?: (items: T[], Cell: typeof TableCell) => ReactNode;
+  Header: (key: keyof T, indx: number) => ReactNode;
 }
-const TransactionTable = ({
+
+const TransactionTable = <T extends { id: string }>({
   className,
   items,
   filterAccount = true,
   onRefresh,
+  render,
+  Filter,
+  EditDialog,
+  DeleteDialog,
+  AddDialog,
+  Footer,
+  Header,
   ...props
-}: React.ComponentProps<"div"> & TransactionTableProps) => {
+}: React.ComponentProps<"div"> & TransactionTableProps<T>) => {
   const [query, setQuery] = useState("");
   const [accountId, setAccountId] = useState<string | null>(null);
 
   const handleRefresh = () => onRefresh && onRefresh();
 
-  const customFilter = (item: TableDataSchema) => {
-    const regex = new RegExp(query, "i");
-    const matched = regex.test(item.invoice) || regex.test(item.note || "");
-
-    if (!accountId) return matched;
-    return item.account.id === accountId && matched;
-  };
-
   return (
     <Container className={cn("h-fit min-h-full", className)} {...props}>
       <div className="flex gap-2">
-        <AddDialog />
+        {AddDialog && AddDialog}
         <Button
           variant="outline"
           onClick={handleRefresh}
@@ -53,7 +65,15 @@ const TransactionTable = ({
         />
         {filterAccount && <AccountSelect onChange={setAccountId} />}
       </div>
-      <MainTable items={items} filter={customFilter} />
+      <MainTable
+        Header={Header}
+        render={render}
+        items={items}
+        filter={(itemFilter) => Filter(itemFilter, query, accountId)}
+        EditDialog={EditDialog}
+        DeleteDialog={DeleteDialog}
+        Footer={Footer}
+      />
     </Container>
   );
 };

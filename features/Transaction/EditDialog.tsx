@@ -21,7 +21,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "../../components/ui/form";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,12 +31,12 @@ import {
   SelectValue,
   SelectContent,
   SelectTrigger,
-} from "../ui/select";
+} from "../../components/ui/select";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useEffect, useState } from "react";
-import { Input } from "../ui/input";
+import { Input } from "../../components/ui/input";
 import { updateTransaction } from "@/redux/transaction/TransactionThunk";
-import { useUser } from "../UserProvider";
+import { useUser } from "../../components/UserProvider";
 import { fetchAccounts } from "@/redux/account/AccountThunk";
 
 const formSchema = yup.object({

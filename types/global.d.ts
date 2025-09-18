@@ -1,14 +1,15 @@
-type Account = {
+type AccountType = {
   id: string;
   name: string;
 };
 
 type TableDataSchema = {
-  invoice: string;
-  account: Account;
-  amount: number;
+  id: string;
+  account: AccountType;
   paymentMethod: "Cash" | "Bank Transfer";
-  note?: string;
+  note: string;
+  amount: number;
+  type: TransactionType;
 };
 
 interface AITransactionResponse {
