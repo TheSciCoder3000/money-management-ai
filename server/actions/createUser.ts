@@ -17,5 +17,5 @@ export async function CreateUser(
     },
   });
 
-  if (error) throw Error("error in creating user");
+  if (error) throw Error(`Error: ${error.message}`);
 }

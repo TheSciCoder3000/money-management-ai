@@ -16,6 +16,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { PasswordMatchException } from "./PasswordMatchException";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const formSchema = yup.object({
   username: yup.string().required("Please enter a valid username"),
@@ -56,6 +57,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSignUp }) => {
     } catch (error) {
       console.error("Form submission error", error);
       if (error instanceof PasswordMatchException) toast.error(error.message);
+      else if (error instanceof Error) toast.error(error.message);
       else toast.error("Failed to submit the form. Please try again.");
     }
   }
@@ -167,6 +169,13 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSignUp }) => {
           <Button type="submit" className="w-full cursor-pointer">
             Sign In
           </Button>
+
+          <div className="text-sm">
+            Don&apos;t have an account?{" "}
+            <Link className="text-blue-500" href={"/login"}>
+              Login
+            </Link>
+          </div>
         </form>
       </Form>
     </div>

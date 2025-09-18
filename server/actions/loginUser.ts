@@ -10,7 +10,7 @@ export async function LoginUser(email: string, password: string) {
     password,
   });
 
-  if (error) throw Error("cannot log in user");
+  if (error) throw Error(`Error: ${error.message}`);
 
   return data;
 }
