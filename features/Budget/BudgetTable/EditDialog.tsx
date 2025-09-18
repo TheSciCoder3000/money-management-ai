@@ -23,66 +23,61 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Select,
-  SelectItem,
-  SelectValue,
-  SelectContent,
-  SelectTrigger,
-} from "@/components/ui/select";
 import { useAppDispatch } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { updateTransaction } from "@/redux/transaction/TransactionThunk";
 import { useUser } from "@/components/UserProvider";
-import { fetchAccounts } from "@/redux/account/AccountThunk";
+import { updateCategories } from "@/redux/category/CategoryThunk";
 
 const formSchema = yup.object({
-  paymentMethod: yup.string().required().default("Cash"),
-  type: yup.string().required(),
-  note: yup.string().required(),
-  amount: yup.number().min(0).required(),
+  name: yup.string().required(),
+  budget: yup
+    .number()
+    .typeError("Amount must be a number")
+    .nullable() // allow null
+    .transform((value, originalValue) =>
+      String(originalValue).trim() === "" ? null : value,
+    ),
 });
 
 type formData = yup.InferType<typeof formSchema>;
 
 interface EditDialogProps extends Partial<formData> {
-  transaction_id: string;
-  account: IAccountDb;
+  category_id: string;
 }
 const EditDialog: React.FC<EditDialogProps> = ({
-  transaction_id,
-  account,
-  paymentMethod,
-  type,
-  note,
-  amount,
+  category_id,
+  name,
+  budget,
 }) => {
   const { session } = useUser();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
   const { reset, ...form } = useForm<formData>({
-    resolver: yupResolver(formSchema),
-    defaultValues: { paymentMethod, type, note, amount },
+    resolver: yupResolver(formSchema) as Resolver<formData>,
+    defaultValues: { name, budget },
   });
 
+  useEffect(() => {
+    reset({ name, budget });
+  }, [reset, name, budget]);
+
   function onSubmit(values: formData) {
+    console.log({ values });
     if (!session) return;
     dispatch(
-      updateTransaction({
+      updateCategories({
         token: session.access_token,
         value: {
-          id: transaction_id,
-          account_id: account.id,
-          note: values.note,
-          value: values.amount,
-          type: values.type as TransactionType,
+          id: category_id,
+          name: values.name,
+          budget: values.budget ?? null,
         },
       }),
-    ).then(() => dispatch(fetchAccounts()));
+    );
     setOpen(false);
   }
 
@@ -90,10 +85,6 @@ const EditDialog: React.FC<EditDialogProps> = ({
     if (!open) reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
-
-  useEffect(() => {
-    reset({ paymentMethod, type, note, amount });
-  }, [reset, paymentMethod, type, note, amount]);
 
   return (
     <Drawer direction="right" open={open} onOpenChange={setOpen}>
@@ -118,40 +109,12 @@ const EditDialog: React.FC<EditDialogProps> = ({
             <div className="grid w-full grid-cols-1 gap-8 p-4">
               <FormField
                 control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Transaction Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Account type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {["income", "expenses", "trasfer"].map((item) => (
-                          <SelectItem key={item} value={item}>
-                            {item}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="paymentMethod"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Method</FormLabel>
+                    <FormLabel>Category Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="payment method" {...field} />
+                      <Input placeholder="name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -160,26 +123,17 @@ const EditDialog: React.FC<EditDialogProps> = ({
 
               <FormField
                 control={form.control}
-                name="amount"
+                name="budget"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Amount</FormLabel>
+                    <FormLabel>Budget</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="amount" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="note"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Note</FormLabel>
-                    <FormControl>
-                      <Input placeholder="note..." {...field} />
+                      <Input
+                        type="number"
+                        placeholder="amount"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

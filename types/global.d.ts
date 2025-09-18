@@ -40,3 +40,11 @@ interface ITransactionDb {
 }
 
 type TransactionType = "income" | "expenses" | "transfer";
+
+interface ICategoryDb {
+  id: string;
+  created_at: string;
+  name: string;
+  user_id: string;
+  budget: number | null;
+}

@@ -3,32 +3,25 @@
 import TransactionTable from "@/components/TransactionTable";
 import { TableHead } from "@/components/ui/table";
 import { ParseCash } from "@/lib/utils";
+import { useAppSelector } from "@/redux/store";
 import clsx from "clsx";
 import React from "react";
-
-const fakeData = [
-  {
-    id: "0",
-    name: "Electricity",
-    limit: 3000,
-  },
-  {
-    id: "1",
-    name: "Electricity",
-    limit: 3000,
-  },
-  {
-    id: "2",
-    name: "Electricity",
-    limit: 3000,
-  },
-];
+import AddDialog from "./BudgetTable/AddDialog";
+import DeleteDialog from "./BudgetTable/DeleteDialog";
+import EditDialog from "./BudgetTable/EditDialog";
 
 const BudgetTable = () => {
+  const { categories } = useAppSelector((state) => state.category);
+  const items = categories.map((item) => ({
+    id: item.id,
+    name: item.name,
+    budget: item.budget,
+  }));
+
   return (
     <div className="col-span-2">
       <TransactionTable
-        items={fakeData}
+        items={items}
         Header={(key, indx) => (
           <TableHead
             className={clsx(
@@ -48,11 +41,20 @@ const BudgetTable = () => {
                 {value as string}
               </TableCell>
             );
-          if (key === "limit")
-            return <TableCell>{ParseCash(value as number)}</TableCell>;
+          if (key === "budget")
+            return <TableCell>{ParseCash(value as number | null)}</TableCell>;
           return <TableCell>{value as string}</TableCell>;
         }}
         filterAccount={false}
+        AddDialog={<AddDialog />}
+        DeleteDialog={(item) => <DeleteDialog id={item.id} />}
+        EditDialog={(item) => (
+          <EditDialog
+            category_id={item.id}
+            name={item.name}
+            budget={item.budget}
+          />
+        )}
       />
     </div>
   );

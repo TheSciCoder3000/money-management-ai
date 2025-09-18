@@ -5,6 +5,7 @@ import { store, useAppDispatch } from "@/redux/store";
 import { Provider } from "react-redux";
 import { fetchAccounts } from "./account/AccountThunk";
 import { fetchTransactons } from "./transaction/TransactionThunk";
+import { fetchCategories } from "./category/CategoryThunk";
 
 interface StoreProviderProps {
   children: ReactNode | ReactNode[];
@@ -26,6 +27,7 @@ export const InitialRender: React.FC<InitialRenderProps> = ({ children }) => {
   useEffect(() => {
     dispatch(fetchAccounts());
     dispatch(fetchTransactons());
+    dispatch(fetchCategories());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return <>{children}</>;

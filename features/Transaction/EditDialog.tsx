@@ -54,16 +54,20 @@ interface EditDialogProps extends Partial<formData> {
 }
 const EditDialog: React.FC<EditDialogProps> = ({
   transaction_id,
-  ...defaultValues
+  account_id,
+  paymentMethod,
+  type,
+  note,
+  amount,
 }) => {
   const { accounts } = useAppSelector((state) => state.account);
   const { session } = useUser();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
-  const form = useForm<formData>({
+  const { reset, ...form } = useForm<formData>({
     resolver: yupResolver(formSchema),
-    defaultValues: { ...defaultValues },
+    defaultValues: { account_id, paymentMethod, type, note, amount },
   });
 
   function onSubmit(values: formData) {
@@ -84,9 +88,14 @@ const EditDialog: React.FC<EditDialogProps> = ({
   }
 
   useEffect(() => {
-    if (!open) form.reset();
+    if (!open) reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  useEffect(() => {
+    reset({ account_id, paymentMethod, type, note, amount });
+    console.log("reseting");
+  }, [reset, account_id, paymentMethod, type, note, amount]);
 
   return (
     <Drawer direction="right" open={open} onOpenChange={setOpen}>
@@ -96,7 +105,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
         </button>
       </DrawerTrigger>
       <DrawerContent>
-        <Form {...form}>
+        <Form {...form} reset={reset}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="mx-auto w-full max-w-sm overflow-auto"

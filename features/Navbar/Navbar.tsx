@@ -28,7 +28,7 @@ const RoutesData: { label: string; href: Route; icon: typeof Settings }[] = [
     icon: CreditCard,
   },
   {
-    label: "Budget",
+    label: "Budget & Categories",
     href: "/budget",
     icon: Wallet,
   },
