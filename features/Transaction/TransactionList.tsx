@@ -58,6 +58,7 @@ const TransactionList = ({
 
   return (
     <TransactionTable
+      items={items}
       Header={(key, indx) => {
         const headers = [
           "Invoice",
@@ -81,7 +82,7 @@ const TransactionList = ({
         );
       }}
       Filter={customFilter}
-      render={(indx, value, key, TableCell) => {
+      render={(indx, value, key, TableCell, item) => {
         if (key === "type") return <></>;
         if (indx === 0)
           return (
@@ -95,19 +96,24 @@ const TransactionList = ({
           return <TableCell>{(value as { name: string }).name}</TableCell>;
         if (key === "amount")
           return (
-            <TableCell className="text-right">
+            <TableCell
+              className={clsx(
+                "text-right",
+                item.type === "expenses" ? "text-red-500" : "text-green-600",
+              )}
+            >
               {ParseCash(value as number)}
             </TableCell>
           );
         return <TableCell>{value as string}</TableCell>;
       }}
       onRefresh={handleRefresh}
-      items={items}
       className={cn(className)}
       AddDialog={<AddDialog />}
       EditDialog={(item) => (
         <EditDialog
           transaction_id={item.id}
+          category_id={item.category.id}
           paymentMethod="Cash"
           account_id={item.account.id}
           amount={item.amount}

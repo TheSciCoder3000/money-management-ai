@@ -32,7 +32,7 @@ import {
   SelectContent,
   SelectTrigger,
 } from "@/components/ui/select";
-import { useAppDispatch } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { updateTransaction } from "@/redux/transaction/TransactionThunk";
@@ -41,6 +41,7 @@ import { fetchAccounts } from "@/redux/account/AccountThunk";
 
 const formSchema = yup.object({
   paymentMethod: yup.string().required().default("Cash"),
+  category_id: yup.string().required(),
   type: yup.string().required(),
   note: yup.string().required(),
   amount: yup.number().min(0).required(),
@@ -56,17 +57,19 @@ const EditDialog: React.FC<EditDialogProps> = ({
   transaction_id,
   account,
   paymentMethod,
+  category_id,
   type,
   note,
   amount,
 }) => {
+  const { categories } = useAppSelector((state) => state.category);
   const { session } = useUser();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
   const { reset, ...form } = useForm<formData>({
     resolver: yupResolver(formSchema),
-    defaultValues: { paymentMethod, type, note, amount },
+    defaultValues: { paymentMethod, type, note, amount, category_id },
   });
 
   function onSubmit(values: formData) {
@@ -80,6 +83,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
           note: values.note,
           value: values.amount,
           type: values.type as TransactionType,
+          category_id: values.category_id,
         },
       }),
     ).then(() => dispatch(fetchAccounts()));
@@ -92,8 +96,8 @@ const EditDialog: React.FC<EditDialogProps> = ({
   }, [open]);
 
   useEffect(() => {
-    reset({ paymentMethod, type, note, amount });
-  }, [reset, paymentMethod, type, note, amount]);
+    reset({ paymentMethod, category_id, type, note, amount });
+  }, [reset, paymentMethod, type, note, category_id, amount]);
 
   return (
     <Drawer direction="right" open={open} onOpenChange={setOpen}>
@@ -135,6 +139,34 @@ const EditDialog: React.FC<EditDialogProps> = ({
                         {["income", "expenses", "trasfer"].map((item) => (
                           <SelectItem key={item} value={item}>
                             {item}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="category_id"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Category</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Account type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {categories.map((item) => (
+                          <SelectItem key={item.id} value={item.id}>
+                            {item.name}
                           </SelectItem>
                         ))}
                       </SelectContent>

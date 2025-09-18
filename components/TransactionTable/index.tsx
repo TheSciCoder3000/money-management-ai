@@ -21,6 +21,7 @@ interface TransactionTableProps<T extends { id: string }> {
     value: T[keyof T],
     key: keyof T,
     Cell: typeof TableCell,
+    item: T,
   ) => ReactNode;
   AddDialog?: ReactNode;
   EditDialog?: (item: T) => ReactNode;

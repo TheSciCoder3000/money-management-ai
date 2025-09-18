@@ -41,6 +41,7 @@ import { fetchAccounts } from "@/redux/account/AccountThunk";
 
 const formSchema = yup.object({
   account_id: yup.string().required(),
+  category_id: yup.string().required(),
   paymentMethod: yup.string().required().default("Cash"),
   type: yup.string().required(),
   note: yup.string().required(),
@@ -56,18 +57,27 @@ const EditDialog: React.FC<EditDialogProps> = ({
   transaction_id,
   account_id,
   paymentMethod,
+  category_id,
   type,
   note,
   amount,
 }) => {
   const { accounts } = useAppSelector((state) => state.account);
+  const { categories } = useAppSelector((state) => state.category);
   const { session } = useUser();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
   const { reset, ...form } = useForm<formData>({
     resolver: yupResolver(formSchema),
-    defaultValues: { account_id, paymentMethod, type, note, amount },
+    defaultValues: {
+      account_id,
+      paymentMethod,
+      type,
+      note,
+      amount,
+      category_id,
+    },
   });
 
   function onSubmit(values: formData) {
@@ -78,6 +88,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
         value: {
           id: transaction_id,
           account_id: values.account_id,
+          category_id: values.category_id,
           note: values.note,
           value: values.amount,
           type: values.type as TransactionType,
@@ -93,9 +104,9 @@ const EditDialog: React.FC<EditDialogProps> = ({
   }, [open]);
 
   useEffect(() => {
-    reset({ account_id, paymentMethod, type, note, amount });
+    reset({ account_id, category_id, paymentMethod, type, note, amount });
     console.log("reseting");
-  }, [reset, account_id, paymentMethod, type, note, amount]);
+  }, [reset, account_id, category_id, paymentMethod, type, note, amount]);
 
   return (
     <Drawer direction="right" open={open} onOpenChange={setOpen}>
@@ -135,6 +146,34 @@ const EditDialog: React.FC<EditDialogProps> = ({
                       </FormControl>
                       <SelectContent>
                         {accounts.map((item) => (
+                          <SelectItem key={item.id} value={item.id}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="category_id"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Category</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {categories.map((item) => (
                           <SelectItem key={item.id} value={item.id}>
                             {item.name}
                           </SelectItem>

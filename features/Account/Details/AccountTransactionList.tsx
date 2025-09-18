@@ -71,6 +71,7 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
           amount={item.amount}
           account={account}
           transaction_id={item.id}
+          category_id={item.category?.id}
         />
       )}
       DeleteDialog={(item) => <DeleteDialog id={item.id} />}

@@ -18,6 +18,7 @@ interface MainTableProps<T extends { id: string }> {
     value: T[keyof T],
     key: keyof T,
     Cell: typeof TableCell,
+    item: T,
   ) => ReactNode;
   filter?: (items: T) => boolean;
   EditDialog?: (item: T) => ReactNode;
@@ -48,7 +49,7 @@ const MainTable = <T extends { id: string }>({
         {items.filter(filter).map((invoice) => (
           <TableRow key={invoice.id}>
             {keys.map((itemKey, indx) =>
-              render(indx, invoice[itemKey], itemKey, TableCell),
+              render(indx, invoice[itemKey], itemKey, TableCell, invoice),
             )}
             <TableCell className="flex justify-end">
               <div className="flex w-fit justify-between">
