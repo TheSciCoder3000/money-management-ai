@@ -47,4 +47,5 @@ interface ICategoryDb {
   name: string;
   user_id: string;
   budget: number | null;
+  total: number;
 }

@@ -16,26 +16,32 @@ const BudgetTable = () => {
     id: item.id,
     name: item.name,
     budget: item.budget,
+    total: item.total,
   }));
 
   return (
     <div className="col-span-2">
       <TransactionTable
         items={items}
-        Header={(key, indx) => (
-          <TableHead
-            className={clsx(
-              indx === 0 && "max-w-[50px]",
-              indx > 3 && "text-right",
-            )}
-            key={indx}
-          >
-            {["Id", "Name", "Limit"][indx]}
-          </TableHead>
-        )}
+        Header={(key, indx) => {
+          if (key === "id") return <></>;
+          const cols = ["id", "Name", "Limit", "Amount"];
+          return (
+            <TableHead
+              className={clsx(
+                indx === 0 && "max-w-[50px]",
+                indx === cols.length - 1 && "text-right",
+              )}
+              key={indx}
+            >
+              {cols[indx]}
+            </TableHead>
+          );
+        }}
         Filter={() => true}
         render={(indx, value, key, TableCell) => {
-          if (indx === 0)
+          if (key === "id") return <></>;
+          if (key === "name")
             return (
               <TableCell className="max-w-[50px] overflow-hidden font-medium">
                 {value as string}
@@ -43,6 +49,12 @@ const BudgetTable = () => {
             );
           if (key === "budget")
             return <TableCell>{ParseCash(value as number | null)}</TableCell>;
+          if (key === "total")
+            return (
+              <TableCell className="text-right">
+                {ParseCash(value as number)}
+              </TableCell>
+            );
           return <TableCell>{value as string}</TableCell>;
         }}
         filterAccount={false}
