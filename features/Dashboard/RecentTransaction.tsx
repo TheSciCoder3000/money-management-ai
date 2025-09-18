@@ -19,7 +19,7 @@ const RecentTransaction: React.FC<RecentTransactionProps> = ({ className }) => {
     <Container className={cn("h-75", className)}>
       <ContainerHeader>Recent Transaction</ContainerHeader>
       <div className="relative flex flex-1 flex-col gap-2 overflow-auto">
-        {transactions.map((item) => (
+        {transactions.slice(0, 5).map((item) => (
           <div
             key={item.id}
             className="flex w-full items-center justify-between"
