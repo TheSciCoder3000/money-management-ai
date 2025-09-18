@@ -31,7 +31,7 @@ interface AddArgs {
   value: {
     account_id: string;
     value: number;
-    category: string;
+    category_id: string;
     type: TransactionType;
     note: string;
   };

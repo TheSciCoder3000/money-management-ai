@@ -34,7 +34,7 @@ interface ITransactionDb {
   account_id: string;
   user_id: string;
   value: number;
-  category: string;
+  category_id: string;
   type: TransactionType;
   note: string;
 }

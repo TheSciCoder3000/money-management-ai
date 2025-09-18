@@ -3,7 +3,7 @@
 import React from "react";
 import clsx from "clsx";
 import TransactionTable from "@/components/TransactionTable";
-import { TableHead } from "@/components/ui/table";
+import { TableCell, TableHead } from "@/components/ui/table";
 import { useAppSelector } from "@/redux/store";
 import { ParseCash } from "@/lib/utils";
 import AddDialog from "./AddDialog";
@@ -17,12 +17,14 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
   account,
 }) => {
   const { transactions } = useAppSelector((state) => state.transaction);
+  const { categories } = useAppSelector((state) => state.category);
 
   const items = transactions
     .filter((item) => item.account_id === account.id)
     .map((item) => ({
       id: item.id,
       paymentMethod: "Cash",
+      category: categories.find((cat) => cat.id === item.category_id),
       note: item.note,
       amount: item.value,
       type: item.type,
@@ -32,7 +34,6 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
     <TransactionTable
       items={items}
       Header={(key, indx) => {
-        console.log({ key, state: key === "type" });
         if (key === "type") return <></>;
         return (
           <TableHead
@@ -42,14 +43,20 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
             )}
             key={indx}
           >
-            {["Invoice", "Method", "Note", "Amount"][indx]}
+            {["Invoice", "Method", "Category", "Note", "Amount"][indx]}
           </TableHead>
         );
       }}
       render={(indx, value, key, DataCell) => {
         if (key === "type") return <></>;
+        if (key === "category")
+          return <TableCell>{(value as ICategoryDb).name}</TableCell>;
         if (key === "amount")
-          return <DataCell>{ParseCash(value as number)}</DataCell>;
+          return (
+            <DataCell className="text-right">
+              {ParseCash(value as number)}
+            </DataCell>
+          );
         return <DataCell>{value as string}</DataCell>;
       }}
       Filter={() => true}
@@ -69,8 +76,8 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
       DeleteDialog={(item) => <DeleteDialog id={item.id} />}
       Footer={(invoices, Cell) => (
         <>
-          <Cell colSpan={3}>Total</Cell>
-          <Cell>
+          <Cell colSpan={4}>Total</Cell>
+          <Cell className="text-right">
             {ParseCash(
               invoices.reduce(
                 (prev, item) =>

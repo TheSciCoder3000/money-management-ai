@@ -64,7 +64,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
         value: {
           account_id: account.id,
           value: values.amount,
-          category: values.category,
+          category_id: values.category,
           type: values.type as TransactionType,
           note: values.note,
         },

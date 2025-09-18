@@ -48,6 +48,7 @@ type formData = yup.InferType<typeof formSchema>;
 
 const AddDialog = () => {
   const { accounts } = useAppSelector((state) => state.account);
+  const { categories } = useAppSelector((state) => state.category);
   const { loading } = useAppSelector((state) => state.transaction);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
@@ -63,7 +64,7 @@ const AddDialog = () => {
         value: {
           account_id: values.account,
           value: values.amount,
-          category: values.category,
+          category_id: values.category,
           type: values.type as TransactionType,
           note: values.note,
         },
@@ -86,11 +87,6 @@ const AddDialog = () => {
         disabled={loading === "pending"}
         className="flex aspect-square w-10 cursor-pointer items-center justify-center rounded-full hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
-        {/* <Button
-          variant={loading === "pending" ? "ghost" : "default"}
-          className="cursor-pointer"
-        >
-        </Button> */}
         <Plus className={clsx("stroke-3")} size={15} />
       </DialogTrigger>
       <DialogContent>
@@ -152,9 +148,9 @@ const AddDialog = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {["test"].map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
+                            {categories.map((item) => (
+                              <SelectItem key={item.id} value={item.id}>
+                                {item.name}
                               </SelectItem>
                             ))}
                           </SelectContent>

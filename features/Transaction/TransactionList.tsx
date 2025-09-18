@@ -16,11 +16,13 @@ const TransactionList = ({
   ...props
 }: React.ComponentProps<"div">) => {
   const { accounts } = useAppSelector((state) => state.account);
+  const { categories } = useAppSelector((state) => state.category);
   const { transactions } = useAppSelector((state) => state.transaction);
   const dispatch = useAppDispatch();
 
-  const items: TableDataSchema[] = transactions.map((item) => {
+  const items = transactions.map((item) => {
     const account = accounts.find((acc) => acc.id === item.account_id);
+    const category = categories.find((cat) => cat.id === item.category_id);
     return {
       id: item.id,
       account: {
@@ -28,10 +30,14 @@ const TransactionList = ({
         name: account?.name || "",
       },
       paymentMethod: "Cash",
+      category: {
+        id: category?.id,
+        name: category?.name,
+      },
       note: item.note,
       amount: item.value,
       type: item.type,
-    } satisfies TableDataSchema;
+    };
   });
 
   const handleRefresh = () => {
@@ -39,7 +45,7 @@ const TransactionList = ({
   };
 
   const customFilter = (
-    item: TableDataSchema,
+    item: (typeof items)[0],
     query: string,
     accountId: string | null,
   ) => {
@@ -53,16 +59,24 @@ const TransactionList = ({
   return (
     <TransactionTable
       Header={(key, indx) => {
+        const headers = [
+          "Invoice",
+          "Account",
+          "Method",
+          "Category",
+          "Note",
+          "Amount",
+        ];
         if (key === "type") return <></>;
         return (
           <TableHead
             className={clsx(
               indx === 0 && "max-w-[50px]",
-              indx > 3 && "text-right",
+              indx === headers.length - 1 && "text-right",
             )}
             key={indx}
           >
-            {["Invoice", "Account", "Method", "Note", "Amount"][indx]}
+            {headers[indx]}
           </TableHead>
         );
       }}
@@ -77,6 +91,8 @@ const TransactionList = ({
           );
         if (key === "account")
           return <TableCell>{(value as AccountType).name}</TableCell>;
+        if (key === "category")
+          return <TableCell>{(value as { name: string }).name}</TableCell>;
         if (key === "amount")
           return (
             <TableCell className="text-right">
@@ -102,7 +118,7 @@ const TransactionList = ({
       DeleteDialog={(item) => <DeleteDialog id={item.id} />}
       Footer={(invoices, Cell) => (
         <>
-          <Cell colSpan={4}>Total</Cell>
+          <Cell colSpan={5}>Total</Cell>
           <Cell className="text-right">
             {ParseCash(
               invoices.reduce(
