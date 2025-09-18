@@ -96,13 +96,10 @@ const TransactionList = ({
           account_id={item.account.id}
           amount={item.amount}
           note={item.note}
+          type={item.type}
         />
       )}
-      DeleteDialog={(item) => (
-        <button className="cursor-pointer rounded-md p-2 hover:bg-gray-200">
-          <DeleteDialog id={item.id} />
-        </button>
-      )}
+      DeleteDialog={(item) => <DeleteDialog id={item.id} />}
       Footer={(invoices, Cell) => (
         <>
           <Cell colSpan={4}>Total</Cell>

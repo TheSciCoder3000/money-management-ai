@@ -1,7 +1,7 @@
 import Container from "@/components/Container";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
-import TransactionTable from "@/components/TransactionTable";
 import AccountDetail from "@/features/Account/Details/AccountDetail";
+import AccountTransactionList from "@/features/Account/Details/AccountTransactionList";
 import IncomeExpenseChart from "@/features/Account/Details/IncomeExpenseChart";
 import { GetAccount } from "@/lib/supabase/account";
 import React from "react";
@@ -19,12 +19,7 @@ async function AccountDetails({ params }: PageProps<"/account/[accountId]">) {
           <IncomeExpenseChart />
         </Container>
         <AccountDetail account={account} />
-
-        <TransactionTable
-          items={[]}
-          className="col-span-4"
-          filterAccount={false}
-        />
+        <AccountTransactionList account={account} />
       </div>
     </div>
   );

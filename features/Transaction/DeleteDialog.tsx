@@ -40,7 +40,10 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ id }) => {
 
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
-      <DialogTrigger disabled={loading === "pending"}>
+      <DialogTrigger
+        disabled={loading === "pending"}
+        className="cursor-pointer rounded-md p-2 hover:bg-gray-200"
+      >
         <Trash2 size={15} />
       </DialogTrigger>
       <DialogContent>

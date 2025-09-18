@@ -21,7 +21,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../components/ui/form";
+} from "@/components/ui/form";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,16 +31,15 @@ import {
   SelectValue,
   SelectContent,
   SelectTrigger,
-} from "../../components/ui/select";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+} from "@/components/ui/select";
+import { useAppDispatch } from "@/redux/store";
 import { useEffect, useState } from "react";
-import { Input } from "../../components/ui/input";
+import { Input } from "@/components/ui/input";
 import { updateTransaction } from "@/redux/transaction/TransactionThunk";
-import { useUser } from "../../components/UserProvider";
+import { useUser } from "@/components/UserProvider";
 import { fetchAccounts } from "@/redux/account/AccountThunk";
 
 const formSchema = yup.object({
-  account_id: yup.string().required(),
   paymentMethod: yup.string().required().default("Cash"),
   type: yup.string().required(),
   note: yup.string().required(),
@@ -51,12 +50,13 @@ type formData = yup.InferType<typeof formSchema>;
 
 interface EditDialogProps extends Partial<formData> {
   transaction_id: string;
+  account: IAccountDb;
 }
 const EditDialog: React.FC<EditDialogProps> = ({
   transaction_id,
+  account,
   ...defaultValues
 }) => {
-  const { accounts } = useAppSelector((state) => state.account);
   const { session } = useUser();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
@@ -73,7 +73,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
         token: session.access_token,
         value: {
           id: transaction_id,
-          account_id: values.account_id,
+          account_id: account.id,
           note: values.note,
           value: values.amount,
           type: values.type as TransactionType,
@@ -109,34 +109,6 @@ const EditDialog: React.FC<EditDialogProps> = ({
             </DrawerHeader>
 
             <div className="grid w-full grid-cols-1 gap-8 p-4">
-              <FormField
-                control={form.control}
-                name="account_id"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Account</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Account type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {accounts.map((item) => (
-                          <SelectItem key={item.id} value={item.id}>
-                            {item.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <FormField
                 control={form.control}
                 name="type"
