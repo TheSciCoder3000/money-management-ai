@@ -16,7 +16,7 @@ const RecentTransaction: React.FC<RecentTransactionProps> = ({ className }) => {
   const { accounts } = useAppSelector((state) => state.account);
 
   return (
-    <Container className={cn("h-75", className)}>
+    <Container className={cn("max-h-75", className)}>
       <ContainerHeader>Recent Transaction</ContainerHeader>
       <div className="relative flex flex-1 flex-col gap-2 overflow-auto">
         {transactions.slice(0, 5).map((item) => (
