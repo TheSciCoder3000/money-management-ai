@@ -58,7 +58,6 @@ const IncomeExpensesChart: React.FC<IncomeExpensesChartProps> = ({
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
     plugins: {
       legend: { position: "top" as const },
       title: {
@@ -71,14 +70,12 @@ const IncomeExpensesChart: React.FC<IncomeExpensesChartProps> = ({
   return (
     <Container className={cn(className)}>
       <ContainerHeader>Income vs Expenses</ContainerHeader>
-      <div className="flex h-full flex-1 items-center justify-center">
-        <Line
-          style={{ height: "100%" }}
-          className="h-40"
-          data={data}
-          options={options}
-        />
-      </div>
+      <Line
+        style={{ height: "100%" }}
+        className="p-2"
+        data={data}
+        options={options}
+      />
     </Container>
   );
 };

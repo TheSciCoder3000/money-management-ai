@@ -80,9 +80,7 @@ const ExpensesLimit: React.FC<ExpensesLimitProps> = ({ className }) => {
   return (
     <Container className={cn(className)}>
       <ContainerHeader>Expenses</ContainerHeader>
-      <div className="flex flex-1 items-center justify-center pb-2">
-        <Bar data={data} options={options} />
-      </div>
+      <Bar className="p-2" data={data} options={options} />
     </Container>
   );
 };
