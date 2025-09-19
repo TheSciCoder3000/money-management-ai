@@ -7,40 +7,55 @@ import Link from "next/link";
 import React from "react";
 import ContainerHeader from "./ContainerHeader";
 import { useAppSelector } from "@/redux/store";
+import EmptyPrompt from "./EmptyPrompt";
+import Loader from "@/components/Loader";
 
 interface RecentTransactionProps {
   className?: string;
 }
 const RecentTransaction: React.FC<RecentTransactionProps> = ({ className }) => {
-  const { transactions } = useAppSelector((state) => state.transaction);
-  const { accounts } = useAppSelector((state) => state.account);
+  const { transactions, loading: transactionLoading } = useAppSelector(
+    (state) => state.transaction,
+  );
+  const { accounts, loading: accountLoading } = useAppSelector(
+    (state) => state.account,
+  );
 
   return (
     <Container className={cn(className)}>
       <ContainerHeader>Recent Transaction</ContainerHeader>
       <div className="relative flex flex-1 flex-col gap-2 overflow-auto">
-        {transactions.slice(0, 5).map((item) => (
-          <div
-            key={item.id}
-            className="flex w-full items-center justify-between"
-          >
-            <div>
-              <h2 className="text-sm">{item.note}</h2>
-              <h3 className="text-xs text-gray-400">
-                {accounts.find((acc) => acc.id === item.account_id)?.name}
-              </h3>
-            </div>
-
+        <Loader
+          loading={
+            transactionLoading === "pending" || accountLoading === "pending"
+          }
+        >
+          {transactions.length === 0 && (
+            <EmptyPrompt message="No Transactions" />
+          )}
+          {transactions.slice(0, 5).map((item) => (
             <div
-              className={clsx(
-                "",
-                item.type === "income" ? "text-green-500" : "text-red-500",
-              )}
+              key={item.id}
+              className="flex w-full items-center justify-between"
             >
-              <p>{ParseCash(item.value)}</p>
+              <div>
+                <h2 className="text-sm">{item.note}</h2>
+                <h3 className="text-xs text-gray-400">
+                  {accounts.find((acc) => acc.id === item.account_id)?.name}
+                </h3>
+              </div>
+
+              <div
+                className={clsx(
+                  "",
+                  item.type === "income" ? "text-green-500" : "text-red-500",
+                )}
+              >
+                <p>{ParseCash(item.value)}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </Loader>
 
         <Link
           href={"/transactions"}

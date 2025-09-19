@@ -7,6 +7,8 @@ import { Doughnut } from "react-chartjs-2";
 import Container from "@/components/Container";
 import ContainerHeader from "./ContainerHeader";
 import { useAppSelector } from "@/redux/store";
+import EmptyPrompt from "./EmptyPrompt";
+import Loader from "@/components/Loader";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -14,7 +16,7 @@ interface BudgetBreakdownProps {
   className?: string;
 }
 const BudgetBreakdown: React.FC<BudgetBreakdownProps> = ({ className }) => {
-  const { categories } = useAppSelector((state) => state.category);
+  const { categories, loading } = useAppSelector((state) => state.category);
   const data = categories
     .filter((item) => item.budget)
     .sort((a, b) => (b.budget as number) - (a.budget as number))
@@ -30,20 +32,24 @@ const BudgetBreakdown: React.FC<BudgetBreakdownProps> = ({ className }) => {
     <Container className={cn(className)}>
       <ContainerHeader>Budget Breakdown</ContainerHeader>
 
-      <Doughnut
-        className="p-4"
-        data={{
-          labels: data.map((item) => item.label),
-          datasets: [
-            {
-              label: "My First Dataset",
-              data: data.map((item) => item.value),
-              backgroundColor: data.map((item) => item.color),
-              hoverOffset: 4,
-            },
-          ],
-        }}
-      />
+      <Loader loading={loading === "pending"}>
+        {data.length === 0 && <EmptyPrompt message="No Budget Planned" />}
+
+        <Doughnut
+          className="p-4"
+          data={{
+            labels: data.map((item) => item.label),
+            datasets: [
+              {
+                label: "My First Dataset",
+                data: data.map((item) => item.value),
+                backgroundColor: data.map((item) => item.color),
+                hoverOffset: 4,
+              },
+            ],
+          }}
+        />
+      </Loader>
     </Container>
   );
 };

@@ -6,31 +6,38 @@ import Link from "next/link";
 import React from "react";
 import ContainerHeader from "./ContainerHeader";
 import { useAppSelector } from "@/redux/store";
+import EmptyPrompt from "./EmptyPrompt";
+import Loader from "@/components/Loader";
 
 interface AccountListProps {
   className?: string;
 }
 const AccountList: React.FC<AccountListProps> = ({ className }) => {
-  const { accounts } = useAppSelector((state) => state.account);
+  const { accounts, loading } = useAppSelector((state) => state.account);
   return (
     <Container className={cn(className)}>
       <ContainerHeader>Accounts</ContainerHeader>
       <div className="relative flex flex-1 flex-col gap-2 overflow-auto">
-        {accounts.slice(0, 5).map((item) => (
-          <div
-            key={item.id}
-            className="flex w-full items-center justify-between"
-          >
-            <div>
-              <h2 className="text-sm">{item.name}</h2>
-              <h3 className="text-xs text-gray-400">{item.type}</h3>
-            </div>
+        <Loader loading={loading === "pending"}>
+          {accounts.length === 0 && (
+            <EmptyPrompt message="No Accounts, Create a New Account" />
+          )}
+          {accounts.slice(0, 5).map((item) => (
+            <div
+              key={item.id}
+              className="flex w-full items-center justify-between"
+            >
+              <div>
+                <h2 className="text-sm">{item.name}</h2>
+                <h3 className="text-xs text-gray-400">{item.type}</h3>
+              </div>
 
-            <div>
-              <p>{ParseCash(item.income - item.expenses)}</p>
+              <div>
+                <p>{ParseCash(item.income - item.expenses)}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </Loader>
 
         <Link
           href={"/account"}
