@@ -60,6 +60,8 @@ const TransactionList = ({
     <TransactionTable
       items={items}
       Header={(key, indx) => {
+        if (key === "id") return;
+
         const headers = [
           "Invoice",
           "Account",
@@ -83,6 +85,7 @@ const TransactionList = ({
       }}
       Filter={customFilter}
       render={(indx, value, key, TableCell, item) => {
+        if (key === "id") return;
         if (key === "type") return <></>;
         if (indx === 0)
           return (
@@ -124,7 +127,7 @@ const TransactionList = ({
       DeleteDialog={(item) => <DeleteDialog id={item.id} />}
       Footer={(invoices, Cell) => (
         <>
-          <Cell colSpan={5}>Total</Cell>
+          <Cell colSpan={4}>Total</Cell>
           <Cell className="text-right">
             {ParseCash(
               invoices.reduce(

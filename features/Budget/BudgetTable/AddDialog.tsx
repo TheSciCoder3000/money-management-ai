@@ -27,10 +27,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useUser } from "@/components/UserProvider";
 import clsx from "clsx";
 import { addCategories } from "@/redux/category/CategoryThunk";
+import { SketchPicker } from "react-color";
 
 const formSchema = yup.object({
   name: yup.string().required(),
   budget: yup.number(),
+  color: yup.string().required(),
 });
 
 type formData = yup.InferType<typeof formSchema>;
@@ -51,6 +53,7 @@ const AddDialog = () => {
         value: {
           name: values.name,
           budget: values.budget || null,
+          color: values.color,
         },
       }),
     );
@@ -69,14 +72,9 @@ const AddDialog = () => {
         disabled={loading === "pending"}
         className="flex aspect-square w-10 cursor-pointer items-center justify-center rounded-full hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
-        {/* <Button
-          variant={loading === "pending" ? "ghost" : "default"}
-          className="cursor-pointer"
-        >
-        </Button> */}
         <Plus className={clsx("stroke-3")} size={15} />
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="overflow-hidden">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
             <DialogHeader>
@@ -86,7 +84,7 @@ const AddDialog = () => {
               </DialogDescription>
             </DialogHeader>
 
-            <div className="w-full max-w-3xl space-y-8 py-10">
+            <div className="h-[60vh] w-full max-w-3xl space-y-8 overflow-y-auto px-1 py-10">
               <FormField
                 control={form.control}
                 name="name"
@@ -109,6 +107,25 @@ const AddDialog = () => {
                     <FormLabel>Budget</FormLabel>
                     <FormControl>
                       <Input placeholder="amount" type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="color"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Color</FormLabel>
+                    <FormControl>
+                      <SketchPicker
+                        color={field.value}
+                        onChange={(color) => field.onChange(color.hex)}
+                        onChangeComplete={(color) => field.onChange(color.hex)}
+                        className="w-full"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

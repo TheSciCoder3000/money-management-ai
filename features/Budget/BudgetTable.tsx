@@ -14,6 +14,7 @@ const BudgetTable = () => {
   const { categories } = useAppSelector((state) => state.category);
   const items = categories.map((item) => ({
     id: item.id,
+    color: item.color,
     name: item.name,
     budget: item.budget,
     total: item.total,
@@ -25,7 +26,7 @@ const BudgetTable = () => {
         items={items}
         Header={(key, indx) => {
           if (key === "id") return <></>;
-          const cols = ["id", "Name", "Limit", "Amount"];
+          const cols = ["id", "Color", "Name", "Limit", "Amount"];
           return (
             <TableHead
               className={clsx(
@@ -41,6 +42,15 @@ const BudgetTable = () => {
         Filter={() => true}
         render={(indx, value, key, TableCell) => {
           if (key === "id") return <></>;
+          if (key === "color")
+            return (
+              <TableCell className="justify-left flex items-center">
+                <div
+                  className="aspect-square h-4 w-4"
+                  style={{ backgroundColor: value as string }}
+                ></div>
+              </TableCell>
+            );
           if (key === "name")
             return (
               <TableCell className="max-w-[50px] overflow-hidden font-medium">
@@ -65,8 +75,29 @@ const BudgetTable = () => {
             category_id={item.id}
             name={item.name}
             budget={item.budget}
+            color={item.color}
           />
         )}
+        Footer={(items, Cell) => {
+          return (
+            <>
+              <Cell colSpan={2} className="font-bold">
+                Total
+              </Cell>
+              <Cell className="font-bold">
+                {ParseCash(
+                  items.reduce((total, prev) => total + (prev.budget ?? 0), 0),
+                )}
+              </Cell>
+              <Cell className="text-right font-bold">
+                {ParseCash(
+                  items.reduce((total, prev) => total + prev.total, 0),
+                )}
+              </Cell>
+              <Cell />
+            </>
+          );
+        }}
       />
     </div>
   );

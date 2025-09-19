@@ -30,9 +30,11 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@/components/UserProvider";
 import { updateCategories } from "@/redux/category/CategoryThunk";
+import { SketchPicker } from "react-color";
 
 const formSchema = yup.object({
   name: yup.string().required(),
+  color: yup.string().required(),
   budget: yup
     .number()
     .typeError("Amount must be a number")
@@ -51,6 +53,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
   category_id,
   name,
   budget,
+  color,
 }) => {
   const { session } = useUser();
   const dispatch = useAppDispatch();
@@ -58,12 +61,12 @@ const EditDialog: React.FC<EditDialogProps> = ({
 
   const { reset, ...form } = useForm<formData>({
     resolver: yupResolver(formSchema) as Resolver<formData>,
-    defaultValues: { name, budget },
+    defaultValues: { name, budget, color },
   });
 
   useEffect(() => {
-    reset({ name, budget });
-  }, [reset, name, budget]);
+    reset({ name, budget, color });
+  }, [reset, name, budget, color]);
 
   function onSubmit(values: formData) {
     console.log({ values });
@@ -75,6 +78,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
           id: category_id,
           name: values.name,
           budget: values.budget ?? null,
+          color: values.color,
         },
       }),
     );
@@ -133,6 +137,25 @@ const EditDialog: React.FC<EditDialogProps> = ({
                         placeholder="amount"
                         {...field}
                         value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="color"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Color</FormLabel>
+                    <FormControl>
+                      <SketchPicker
+                        color={field.value}
+                        onChange={(color) => field.onChange(color.hex)}
+                        onChangeComplete={(color) => field.onChange(color.hex)}
+                        className="w-full"
                       />
                     </FormControl>
                     <FormMessage />
