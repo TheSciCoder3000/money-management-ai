@@ -13,7 +13,7 @@ interface AccountListProps {
 const AccountList: React.FC<AccountListProps> = ({ className }) => {
   const { accounts } = useAppSelector((state) => state.account);
   return (
-    <Container className={cn("h-75", className)}>
+    <Container className={cn(className)}>
       <ContainerHeader>Accounts</ContainerHeader>
       <div className="relative flex flex-1 flex-col gap-2 overflow-auto">
         {accounts.slice(0, 5).map((item) => (

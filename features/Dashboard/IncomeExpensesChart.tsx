@@ -69,7 +69,7 @@ const IncomeExpensesChart: React.FC<IncomeExpensesChartProps> = ({
   };
 
   return (
-    <Container className={cn("h-75", className)}>
+    <Container className={cn(className)}>
       <ContainerHeader>Income vs Expenses</ContainerHeader>
       <div className="flex h-full flex-1 items-center justify-center">
         <Line

@@ -14,7 +14,7 @@ interface BudgetBreakdownProps {
 }
 const BudgetBreakdown: React.FC<BudgetBreakdownProps> = ({ className }) => {
   return (
-    <Container className={cn("max-h-75", className)}>
+    <Container className={cn(className)}>
       <ContainerHeader>Budget Breakdown</ContainerHeader>
 
       <Doughnut
