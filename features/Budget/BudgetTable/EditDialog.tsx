@@ -6,7 +6,6 @@ import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -91,13 +90,21 @@ const EditDialog: React.FC<EditDialogProps> = ({
   }, [open]);
 
   return (
-    <Drawer direction="right" open={open} onOpenChange={setOpen}>
+    <Drawer
+      dismissible={false}
+      direction="right"
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DrawerTrigger asChild>
         <button className="cursor-pointer rounded-md p-2 hover:bg-gray-200">
           <Pencil size={15} />
         </button>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent
+        onPointerDownOutside={() => setOpen(false)}
+        onEscapeKeyDown={() => setOpen(false)}
+      >
         <Form {...form} reset={reset}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -166,9 +173,9 @@ const EditDialog: React.FC<EditDialogProps> = ({
 
             <DrawerFooter>
               <Button type="submit">Submit</Button>
-              <DrawerClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DrawerClose>
+              <Button onClick={() => setOpen(false)} variant="outline">
+                Cancel
+              </Button>
             </DrawerFooter>
           </form>
         </Form>
