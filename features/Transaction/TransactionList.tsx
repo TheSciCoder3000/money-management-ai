@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { fetchTransactons } from "@/redux/transaction/TransactionThunk";
 import TransactionTable from "@/components/TransactionTable";
@@ -10,6 +10,7 @@ import AddDialog from "@/features/Transaction/AddDialog";
 import { cn, ParseCash } from "@/lib/utils";
 import { TableHead } from "@/components/ui/table";
 import clsx from "clsx";
+import AccountSelect from "@/components/TransactionTable/AccountSelect";
 
 const TransactionList = ({
   className,
@@ -18,6 +19,7 @@ const TransactionList = ({
   const { accounts } = useAppSelector((state) => state.account);
   const { categories } = useAppSelector((state) => state.category);
   const { transactions } = useAppSelector((state) => state.transaction);
+  const [accountId, setAccountId] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
   const items = transactions.map((item) => {
@@ -29,7 +31,6 @@ const TransactionList = ({
         id: account?.id || "",
         name: account?.name || "",
       },
-      paymentMethod: "Cash",
       category: {
         id: category?.id,
         name: category?.name,
@@ -44,11 +45,7 @@ const TransactionList = ({
     dispatch(fetchTransactons());
   };
 
-  const customFilter = (
-    item: (typeof items)[0],
-    query: string,
-    accountId: string | null,
-  ) => {
+  const customFilter = (item: (typeof items)[0], query: string) => {
     const regex = new RegExp(query, "i");
     const matched = regex.test(item.id) || regex.test(item.note || "");
 
@@ -62,14 +59,7 @@ const TransactionList = ({
       Header={(key, indx) => {
         if (key === "id") return;
 
-        const headers = [
-          "Invoice",
-          "Account",
-          "Method",
-          "Category",
-          "Note",
-          "Amount",
-        ];
+        const headers = ["Invoice", "Account", "Category", "Note", "Amount"];
         if (key === "type") return <></>;
         return (
           <TableHead
@@ -117,7 +107,6 @@ const TransactionList = ({
         <EditDialog
           transaction_id={item.id}
           category_id={item.category.id}
-          paymentMethod="Cash"
           account_id={item.account.id}
           amount={item.amount}
           note={item.note}
@@ -127,7 +116,7 @@ const TransactionList = ({
       DeleteDialog={(item) => <DeleteDialog id={item.id} />}
       Footer={(invoices, Cell) => (
         <>
-          <Cell colSpan={4}>Total</Cell>
+          <Cell colSpan={3}>Total</Cell>
           <Cell className="text-right">
             {ParseCash(
               invoices.reduce(
@@ -140,6 +129,7 @@ const TransactionList = ({
           <Cell />
         </>
       )}
+      Selects={<AccountSelect onChange={setAccountId} />}
       {...props}
     />
   );

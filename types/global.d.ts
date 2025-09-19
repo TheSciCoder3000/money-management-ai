@@ -49,4 +49,5 @@ interface ICategoryDb {
   budget: number | null;
   total: number;
   color: string;
+  type: TransactionType;
 }

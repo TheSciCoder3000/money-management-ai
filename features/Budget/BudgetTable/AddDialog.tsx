@@ -28,10 +28,20 @@ import { useUser } from "@/components/UserProvider";
 import clsx from "clsx";
 import { addCategories } from "@/redux/category/CategoryThunk";
 import { SketchPicker } from "react-color";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = yup.object({
   name: yup.string().required(),
   budget: yup.number(),
+  type: yup.string().required(),
   color: yup.string().required(),
 });
 
@@ -53,6 +63,7 @@ const AddDialog = () => {
         value: {
           name: values.name,
           budget: values.budget || null,
+          type: values.type,
           color: values.color,
         },
       }),
@@ -107,6 +118,37 @@ const AddDialog = () => {
                     <FormLabel>Budget</FormLabel>
                     <FormControl>
                       <Input placeholder="amount" type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Budget</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-[150px]">
+                          <SelectValue placeholder="Select Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Types</SelectLabel>
+                            {["expenses", "income"].map((item) => (
+                              <SelectItem key={item} value={item}>
+                                {item}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

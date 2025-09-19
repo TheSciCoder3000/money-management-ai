@@ -23,18 +23,17 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
     .filter((item) => item.account_id === account.id)
     .map((item) => ({
       id: item.id,
-      paymentMethod: "Cash",
       category: categories.find((cat) => cat.id === item.category_id),
+      type: item.type,
       note: item.note,
       amount: item.value,
-      type: item.type,
     }));
 
   return (
     <TransactionTable
       items={items}
       Header={(key, indx) => {
-        if (key === "type") return <></>;
+        if (key === "id") return <></>;
         return (
           <TableHead
             className={clsx(
@@ -43,14 +42,14 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
             )}
             key={indx}
           >
-            {["Invoice", "Method", "Category", "Note", "Amount"][indx]}
+            {["Invoice", "Category", "Type", "Note", "Amount"][indx]}
           </TableHead>
         );
       }}
       render={(indx, value, key, DataCell) => {
-        if (key === "type") return <></>;
+        if (key === "id") return <></>;
         if (key === "category")
-          return <TableCell>{(value as ICategoryDb).name}</TableCell>;
+          return <TableCell>{(value as ICategoryDb | null)?.name}</TableCell>;
         if (key === "amount")
           return (
             <DataCell className="text-right">
@@ -61,11 +60,9 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
       }}
       Filter={() => true}
       className="col-span-4"
-      filterAccount={false}
       AddDialog={<AddDialog account={account} />}
       EditDialog={(item) => (
         <EditDialog
-          paymentMethod="Cash"
           type={item.type}
           note={item.note}
           amount={item.amount}
@@ -77,7 +74,7 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
       DeleteDialog={(item) => <DeleteDialog id={item.id} />}
       Footer={(invoices, Cell) => (
         <>
-          <Cell colSpan={4}>Total</Cell>
+          <Cell colSpan={3}>Total</Cell>
           <Cell className="text-right">
             {ParseCash(
               invoices.reduce(

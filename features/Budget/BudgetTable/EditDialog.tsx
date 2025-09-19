@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Pencil } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -30,10 +29,20 @@ import { Input } from "@/components/ui/input";
 import { useUser } from "@/components/UserProvider";
 import { updateCategories } from "@/redux/category/CategoryThunk";
 import { SketchPicker } from "react-color";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = yup.object({
   name: yup.string().required(),
   color: yup.string().required(),
+  type: yup.string().required(),
   budget: yup
     .number()
     .typeError("Amount must be a number")
@@ -52,6 +61,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
   category_id,
   name,
   budget,
+  type,
   color,
 }) => {
   const { session } = useUser();
@@ -60,12 +70,12 @@ const EditDialog: React.FC<EditDialogProps> = ({
 
   const { reset, ...form } = useForm<formData>({
     resolver: yupResolver(formSchema) as Resolver<formData>,
-    defaultValues: { name, budget, color },
+    defaultValues: { name, budget, color, type },
   });
 
   useEffect(() => {
-    reset({ name, budget, color });
-  }, [reset, name, budget, color]);
+    reset({ name, budget, color, type });
+  }, [reset, name, budget, color, type]);
 
   function onSubmit(values: formData) {
     console.log({ values });
@@ -78,6 +88,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
           name: values.name,
           budget: values.budget ?? null,
           color: values.color,
+          type: values.type as TransactionType,
         },
       }),
     );
@@ -145,6 +156,35 @@ const EditDialog: React.FC<EditDialogProps> = ({
                         {...field}
                         value={field.value ?? ""}
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Budget</FormLabel>
+                    <FormControl>
+                      <Select {...field} onValueChange={field.onChange}>
+                        <SelectTrigger className="w-[150px]">
+                          <SelectValue placeholder="Select Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Types</SelectLabel>
+                            <SelectItem value="all">All Types</SelectItem>
+                            {["expenses", "income"].map((item) => (
+                              <SelectItem key={item} value={item}>
+                                {item}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -3,7 +3,6 @@
 import React, { ReactNode, useState } from "react";
 
 import MainTable from "./MainTable";
-import AccountSelect from "./AccountSelect";
 import Container from "@/components/Container";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,9 +11,9 @@ import { cn } from "@/lib/utils";
 
 import { RefreshCw } from "lucide-react";
 interface TransactionTableProps<T extends { id: string }> {
-  filterAccount?: boolean;
+  Selects?: ReactNode;
   items: T[];
-  Filter: (item: T, query: string, accountId: string | null) => boolean;
+  Filter: (item: T, query: string) => boolean;
   onRefresh?: () => void;
   render: (
     indx: number,
@@ -33,7 +32,7 @@ interface TransactionTableProps<T extends { id: string }> {
 const TransactionTable = <T extends { id: string }>({
   className,
   items,
-  filterAccount = true,
+  Selects,
   onRefresh,
   render,
   Filter,
@@ -45,7 +44,6 @@ const TransactionTable = <T extends { id: string }>({
   ...props
 }: React.ComponentProps<"div"> & TransactionTableProps<T>) => {
   const [query, setQuery] = useState("");
-  const [accountId, setAccountId] = useState<string | null>(null);
 
   const handleRefresh = () => onRefresh && onRefresh();
 
@@ -64,13 +62,13 @@ const TransactionTable = <T extends { id: string }>({
           placeholder="Filter By..."
           onChange={(e) => setQuery(e.target.value)}
         />
-        {filterAccount && <AccountSelect onChange={setAccountId} />}
+        {Selects && Selects}
       </div>
       <MainTable
         Header={Header}
         render={render}
         items={items}
-        filter={(itemFilter) => Filter(itemFilter, query, accountId)}
+        filter={(itemFilter) => Filter(itemFilter, query)}
         EditDialog={EditDialog}
         DeleteDialog={DeleteDialog}
         Footer={Footer}

@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreVerticalIcon } from "lucide-react";
 import DeleteAccountDialog from "./DeleteAccountDialog";
 import { useState } from "react";
 
@@ -31,7 +31,7 @@ const MenuAccountCard: React.FC<MenuAccountCardProps> = ({ account }) => {
         className="menu-btn absolute right-4 cursor-pointer rounded-full p-1.5 hover:bg-gray-100"
       >
         <button>
-          <MoreHorizontalIcon size={15} />
+          <MoreVerticalIcon size={15} />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="start">

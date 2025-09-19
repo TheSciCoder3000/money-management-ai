@@ -50,6 +50,8 @@ const AddDialog = () => {
   const { accounts } = useAppSelector((state) => state.account);
   const { categories } = useAppSelector((state) => state.category);
   const { loading } = useAppSelector((state) => state.transaction);
+  const [transactionType, setTransactionType] =
+    useState<TransactionType | null>(null);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const form = useForm<formData>({
@@ -134,23 +136,26 @@ const AddDialog = () => {
                 <div className="col-span-6">
                   <FormField
                     control={form.control}
-                    name="category"
+                    name="type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Category</FormLabel>
+                        <FormLabel>Type</FormLabel>
                         <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          {...field}
+                          onValueChange={(val) => {
+                            field.onChange(val);
+                            setTransactionType(val as TransactionType);
+                          }}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="category" />
+                              <SelectValue placeholder="type" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {categories.map((item) => (
-                              <SelectItem key={item.id} value={item.id}>
-                                {item.name}
+                            {["income", "expenses", "transfer"].map((item) => (
+                              <SelectItem key={item} value={item}>
+                                {item}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -166,25 +171,27 @@ const AddDialog = () => {
                 <div className="col-span-6">
                   <FormField
                     control={form.control}
-                    name="type"
+                    name="category"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Type</FormLabel>
+                        <FormLabel>Category</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="type" />
+                              <SelectValue placeholder="category" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {["income", "expenses", "transfer"].map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
-                              </SelectItem>
-                            ))}
+                            {categories
+                              .filter((item) => item.type === transactionType)
+                              .map((item) => (
+                                <SelectItem key={item.id} value={item.id}>
+                                  {item.name}
+                                </SelectItem>
+                              ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />

@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Pencil } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -40,7 +39,6 @@ import { useUser } from "@/components/UserProvider";
 import { fetchAccounts } from "@/redux/account/AccountThunk";
 
 const formSchema = yup.object({
-  paymentMethod: yup.string().required().default("Cash"),
   category_id: yup.string().required(),
   type: yup.string().required(),
   note: yup.string().required(),
@@ -56,20 +54,22 @@ interface EditDialogProps extends Partial<formData> {
 const EditDialog: React.FC<EditDialogProps> = ({
   transaction_id,
   account,
-  paymentMethod,
   category_id,
   type,
   note,
   amount,
 }) => {
   const { categories } = useAppSelector((state) => state.category);
+  const [transactionType, setTransactionType] = useState<TransactionType>(
+    type as TransactionType,
+  );
   const { session } = useUser();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
   const { reset, ...form } = useForm<formData>({
     resolver: yupResolver(formSchema),
-    defaultValues: { paymentMethod, type, note, amount, category_id },
+    defaultValues: { type, note, amount, category_id },
   });
 
   function onSubmit(values: formData) {
@@ -96,8 +96,8 @@ const EditDialog: React.FC<EditDialogProps> = ({
   }, [open]);
 
   useEffect(() => {
-    reset({ paymentMethod, category_id, type, note, amount });
-  }, [reset, paymentMethod, type, note, category_id, amount]);
+    reset({ category_id, type, note, amount });
+  }, [reset, type, note, category_id, amount]);
 
   return (
     <Drawer direction="right" open={open} onOpenChange={setOpen}>
@@ -127,7 +127,10 @@ const EditDialog: React.FC<EditDialogProps> = ({
                   <FormItem className="w-full">
                     <FormLabel>Transaction Type</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        setTransactionType(val as TransactionType);
+                      }}
                       defaultValue={field.value}
                     >
                       <FormControl>
@@ -164,27 +167,15 @@ const EditDialog: React.FC<EditDialogProps> = ({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {categories.map((item) => (
-                          <SelectItem key={item.id} value={item.id}>
-                            {item.name}
-                          </SelectItem>
-                        ))}
+                        {categories
+                          .filter((item) => item.type === transactionType)
+                          .map((item) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.name}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="paymentMethod"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Method</FormLabel>
-                    <FormControl>
-                      <Input placeholder="payment method" {...field} />
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

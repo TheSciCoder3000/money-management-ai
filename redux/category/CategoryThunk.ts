@@ -32,6 +32,7 @@ interface AddArgs {
     name: string;
     budget: number | null;
     color: string;
+    type: string;
   };
 }
 export const addCategories = createAsyncThunk(

@@ -26,10 +26,10 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
     <Container
       ref={containerRef}
       onClick={handleClick}
-      className="relative cursor-pointer hover:bg-[#fbfbfb]"
+      className="relative flex h-44 cursor-pointer flex-col justify-between hover:bg-[#fbfbfb]"
     >
       <MenuAccountCard account={account} />
-      <div className="mb-3">
+      <div>
         <h2 className="text-lg">{account.name}</h2>
         <h3 className="text-sm text-gray-400">{account.type}</h3>
       </div>
