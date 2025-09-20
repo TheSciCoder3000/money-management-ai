@@ -15,7 +15,10 @@ export async function GetAccount(id: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("account")
-    .select<`*, transaction (*)`, IAccountDb>("*, transaction (*)")
+    .select<
+      `*, transaction:transaction_account_id_fkey (*)`,
+      IAccountDb
+    >("*, transaction:transaction_account_id_fkey (*)")
     .eq("id", id)
     .single();
 
