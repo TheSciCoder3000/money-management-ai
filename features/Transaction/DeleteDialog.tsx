@@ -21,7 +21,13 @@ interface DeleteDialogProps {
   id: string;
 }
 const DeleteDialog: React.FC<DeleteDialogProps> = ({ id }) => {
-  const state = useAppSelector((state) => state);
+  const { loading: accountLoading } = useAppSelector((state) => state.account);
+  const { loading: categoryLoading } = useAppSelector(
+    (state) => state.category,
+  );
+  const { loading: transactionLoading } = useAppSelector(
+    (state) => state.transaction,
+  );
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const { session } = useUser();
@@ -41,9 +47,9 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ id }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         disabled={
-          state.account.loading === "pending" ||
-          state.category.loading === "pending" ||
-          state.transaction.loading === "pending"
+          accountLoading === "pending" ||
+          categoryLoading === "pending" ||
+          transactionLoading === "pending"
         }
         className="cursor-pointer rounded-md p-2 hover:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-transparent"
       >

@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { isBefore, isEqual } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -30,4 +31,8 @@ export function ParseErrorJson(message: string, status: number) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ParseJson(data: any, status: number) {
   return Response.json({ data }, { status });
+}
+
+export function isBeforeOrEqual(a: Date, b: Date) {
+  return isBefore(a, b) || isEqual(a, b);
 }

@@ -7,12 +7,14 @@ import TransactionTable from "@/components/TransactionTable";
 import DeleteDialog from "@/features/Transaction/DeleteDialog";
 import EditDialog from "@/features/Transaction/EditDialog";
 import AddDialog from "@/features/Transaction/AddDialog";
-import { cn, ParseCash } from "@/lib/utils";
+import { cn, isBeforeOrEqual, ParseCash } from "@/lib/utils";
 import { TableHead } from "@/components/ui/table";
 import clsx from "clsx";
 import AccountSelect from "@/components/TransactionTable/AccountSelect";
 import TransactionTypeSelect from "@/components/TransactionTable/TransactionTypeSelect";
 import { format } from "date-fns";
+import { DateRange } from "react-day-picker";
+import DateRangePicker from "@/components/DateRangePicker";
 
 const TransactionList = ({
   className,
@@ -22,6 +24,8 @@ const TransactionList = ({
   const { categories } = useAppSelector((state) => state.category);
   const { transactions } = useAppSelector((state) => state.transaction);
   const [accountId, setAccountId] = useState<string | null>(null);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+
   const [transactionType, setTransactionType] =
     useState<TransactionType | null>(null);
   const dispatch = useAppDispatch();
@@ -55,7 +59,17 @@ const TransactionList = ({
     const typeMatched =
       transactionType === null || item.category.type === transactionType;
 
-    return accountMatched && matched && typeMatched;
+    const startDate = dateRange?.from;
+    const endDate = dateRange?.to;
+    const itemDate = new Date(item.date);
+    const dateMatched =
+      dateRange === undefined ||
+      (!!startDate &&
+        !!endDate &&
+        isBeforeOrEqual(startDate, itemDate) &&
+        isBeforeOrEqual(itemDate, endDate));
+
+    return accountMatched && matched && typeMatched && dateMatched;
   };
 
   return (
@@ -164,6 +178,7 @@ const TransactionList = ({
         <>
           <AccountSelect onChange={setAccountId} />
           <TransactionTypeSelect onChange={setTransactionType} />
+          <DateRangePicker onValueChange={setDateRange} />
         </>
       }
       {...props}

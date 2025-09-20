@@ -5,13 +5,15 @@ import clsx from "clsx";
 import TransactionTable from "@/components/TransactionTable";
 import { TableCell, TableHead } from "@/components/ui/table";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { ParseCash } from "@/lib/utils";
+import { isBeforeOrEqual, ParseCash } from "@/lib/utils";
 import AddDialog from "./AddDialog";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "@/features/Transaction/DeleteDialog";
 import TransactionTypeSelect from "@/components/TransactionTable/TransactionTypeSelect";
 import { fetchTransactons } from "@/redux/transaction/TransactionThunk";
 import { format } from "date-fns";
+import DateRangePicker from "@/components/DateRangePicker";
+import { DateRange } from "react-day-picker";
 
 interface AccountTransactionListProps {
   account: IAccountDb;
@@ -22,6 +24,7 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
   const { transactions } = useAppSelector((state) => state.transaction);
   const { categories } = useAppSelector((state) => state.category);
   const { accounts } = useAppSelector((state) => state.account);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const dispatch = useAppDispatch();
   const [transactionType, setTransactionType] =
     useState<TransactionType | null>(null);
@@ -47,7 +50,17 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
     const typeMatched =
       transactionType === null || item.category?.type === transactionType;
 
-    return matched && typeMatched;
+    const startDate = dateRange?.from;
+    const endDate = dateRange?.to;
+    const itemDate = new Date(item.date);
+    const dateMatched =
+      dateRange === undefined ||
+      (!!startDate &&
+        !!endDate &&
+        isBeforeOrEqual(startDate, itemDate) &&
+        isBeforeOrEqual(itemDate, endDate));
+
+    return matched && typeMatched && dateMatched;
   };
 
   return (
@@ -138,7 +151,12 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
         </>
       )}
       onRefresh={() => dispatch(fetchTransactons())}
-      Selects={<TransactionTypeSelect onChange={setTransactionType} />}
+      Selects={
+        <>
+          <TransactionTypeSelect onChange={setTransactionType} />
+          <DateRangePicker onValueChange={setDateRange} />
+        </>
+      }
     />
   );
 };
