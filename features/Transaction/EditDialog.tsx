@@ -116,7 +116,8 @@ const EditDialog: React.FC<EditDialogProps> = ({
           category_id: values.category_id,
           note: values.note,
           value: values.amount,
-          target_account_id: values.target,
+          target_account_id:
+            transactionType === "expenses" ? values.target : null,
         },
       }),
     ).then(() => {

@@ -96,7 +96,8 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
           account_id: account.id,
           value: values.amount,
           category_id: values.category,
-          target_account_id: values.target ?? null,
+          target_account_id:
+            transactionType === "transfer" ? (values.target ?? null) : null,
           note: values.note,
           created_at: values.date,
         },

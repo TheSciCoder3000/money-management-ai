@@ -107,7 +107,8 @@ const AddDialog = () => {
           value: values.amount,
           category_id: values.category,
           note: values.note,
-          target_account_id: values.target || null,
+          target_account_id:
+            transactionType === "transfer" ? (values.target ?? null) : null,
           created_at: values.date,
         },
       }),
