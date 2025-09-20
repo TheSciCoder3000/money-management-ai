@@ -20,7 +20,7 @@ const ExpensesChart = () => {
       return {
         label: item.name,
         color: item.color,
-        value: item.budget,
+        value: item.total,
       };
     });
 

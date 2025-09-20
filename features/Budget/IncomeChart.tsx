@@ -20,9 +20,11 @@ const IncomeChart = () => {
       return {
         label: item.name,
         color: item.color,
-        value: item.budget,
+        value: item.total,
       };
     });
+
+  console.log(data);
 
   return (
     <Container className="flex">
