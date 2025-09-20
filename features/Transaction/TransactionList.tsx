@@ -45,10 +45,6 @@ const TransactionList = ({
     };
   });
 
-  const handleRefresh = () => {
-    dispatch(fetchTransactons());
-  };
-
   const customFilter = (item: (typeof items)[0], query: string) => {
     const regex = new RegExp(query, "i");
     const matched = regex.test(item.id) || regex.test(item.note || "");
@@ -122,7 +118,7 @@ const TransactionList = ({
           );
         return <TableCell>{value as string}</TableCell>;
       }}
-      onRefresh={handleRefresh}
+      onRefresh={() => dispatch(fetchTransactons())}
       className={cn(className)}
       AddDialog={<AddDialog />}
       EditDialog={(item) => (

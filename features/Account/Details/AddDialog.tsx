@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -39,8 +39,8 @@ import { fetchAccounts } from "@/redux/account/AccountThunk";
 const formSchema = yup.object({
   note: yup.string().required(),
   category: yup.string().required(),
-  type: yup.string().required(),
   amount: yup.number().required(),
+  target: yup.string().optional(),
 });
 
 type formData = yup.InferType<typeof formSchema>;
@@ -49,7 +49,15 @@ interface AddDialogProps {
   account: IAccountDb;
 }
 const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
+  const { accounts, loading: accountLoading } = useAppSelector(
+    (state) => state.account,
+  );
+  const { categories, loading: categoryLoading } = useAppSelector(
+    (state) => state.category,
+  );
   const { loading } = useAppSelector((state) => state.transaction);
+  const [transactionType, setTransactionType] =
+    useState<TransactionType | null>(null);
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const form = useForm<formData>({
@@ -58,6 +66,26 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
   const { session } = useUser();
 
   const onSubmit = (values: formData) => {
+    if (transactionType === "transfer") {
+      if (!values.target)
+        return form.setError("target", {
+          message: "Select a valid target account",
+        });
+    }
+    if (
+      account.income - account.expenses < values.amount &&
+      transactionType === "expenses"
+    )
+      return form.setError("amount", {
+        message: `Your transaction is greater than your balance`,
+      });
+
+    if (
+      !categories.find(
+        (item) => item.id === values.category && item.type === transactionType,
+      )
+    )
+      return form.setError("category", { message: "Select valid category" });
     dispatch(
       addTransactons({
         token: session?.access_token,
@@ -65,7 +93,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
           account_id: account.id,
           value: values.amount,
           category_id: values.category,
-          type: values.type as TransactionType,
+          target_account_id: values.target ?? null,
           note: values.note,
         },
       }),
@@ -81,17 +109,24 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
     else setOpen(state);
   };
 
+  useEffect(() => {
+    if (!open) {
+      form.reset();
+      setTransactionType(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger
-        disabled={loading === "pending"}
+        disabled={
+          loading === "pending" ||
+          accountLoading === "pending" ||
+          categoryLoading === "pending"
+        }
         className="flex aspect-square w-10 cursor-pointer items-center justify-center rounded-full hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
-        {/* <Button
-          variant={loading === "pending" ? "ghost" : "default"}
-          className="cursor-pointer"
-        >
-        </Button> */}
         <Plus className={clsx("stroke-3")} size={15} />
       </DialogTrigger>
       <DialogContent>
@@ -107,21 +142,34 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
             <div className="w-full max-w-3xl space-y-8 py-10">
               <FormField
                 control={form.control}
-                name="category"
+                name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category</FormLabel>
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="amount" type="number" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-6">
+                  <FormItem>
+                    <FormLabel>Type</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      onValueChange={(val) =>
+                        setTransactionType(val as TransactionType)
+                      }
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="category" />
+                          <SelectValue placeholder="type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {["test"].map((item) => (
+                        {["income", "expenses", "transfer"].map((item) => (
                           <SelectItem key={item} value={item}>
                             {item}
                           </SelectItem>
@@ -130,32 +178,32 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
                     </Select>
                     <FormMessage />
                   </FormItem>
-                )}
-              />
+                </div>
 
-              <div className="grid grid-cols-12 gap-4">
                 <div className="col-span-6">
                   <FormField
                     control={form.control}
-                    name="type"
+                    name="category"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Type</FormLabel>
+                        <FormLabel>Category</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="type" />
+                              <SelectValue placeholder="category" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {["income", "expenses", "transfer"].map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
-                              </SelectItem>
-                            ))}
+                            {categories
+                              .filter((item) => item.type === transactionType)
+                              .map((item) => (
+                                <SelectItem key={item.id} value={item.id}>
+                                  {item.name}
+                                </SelectItem>
+                              ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -163,27 +211,37 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
                     )}
                   />
                 </div>
-
-                <div className="col-span-6">
-                  <FormField
-                    control={form.control}
-                    name="amount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Amount</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="amount"
-                            type="number"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
               </div>
+
+              {transactionType === "transfer" && (
+                <FormField
+                  control={form.control}
+                  name="target"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Target Account</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Account Type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {accounts.map((item) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
 
               <FormField
                 control={form.control}
