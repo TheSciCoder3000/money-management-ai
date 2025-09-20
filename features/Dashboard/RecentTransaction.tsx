@@ -14,6 +14,7 @@ interface RecentTransactionProps {
   className?: string;
 }
 const RecentTransaction: React.FC<RecentTransactionProps> = ({ className }) => {
+  const { categories } = useAppSelector((state) => state.category);
   const { transactions, loading: transactionLoading } = useAppSelector(
     (state) => state.transaction,
   );
@@ -48,7 +49,10 @@ const RecentTransaction: React.FC<RecentTransactionProps> = ({ className }) => {
               <div
                 className={clsx(
                   "",
-                  item.type === "income" ? "text-green-500" : "text-red-500",
+                  categories.find((cat) => cat.id === item.category_id)
+                    ?.type === "income"
+                    ? "text-green-500"
+                    : "text-red-500",
                 )}
               >
                 <p>{ParseCash(item.value)}</p>
