@@ -142,7 +142,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
           categoryLoading === "pending" ||
           loading === "pending"
         }
-        className="transition-colors duration-150 hover:bg-gray-200 disabled:text-gray-400 disabled:hover:bg-transparent"
+        className="transition-colors duration-150 hover:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-transparent"
         asChild
       >
         <button className="cursor-pointer rounded-md p-2">
