@@ -32,8 +32,8 @@ interface AddArgs {
     account_id: string;
     value: number;
     category_id: string;
-    type: TransactionType;
     note: string;
+    target_account_id: string | null;
   };
 }
 export const addTransactons = createAsyncThunk(
