@@ -7,6 +7,7 @@ import React from "react";
 import { useAppSelector } from "@/redux/store";
 import Loader from "@/components/Loader";
 import EmptyPrompt from "../Dashboard/EmptyPrompt";
+import ContainerHeader from "../Dashboard/ContainerHeader";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -24,24 +25,27 @@ const BudgetChart = () => {
     });
 
   return (
-    <Container className="flex h-90 items-center">
+    <Container className="flex">
       <Loader loading={loading === "pending"}>
-        {data.length === 0 && <EmptyPrompt message="No Budget Planned" />}
+        <ContainerHeader>Budget</ContainerHeader>
+        <Loader loading={loading === "pending"}>
+          {data.length === 0 && <EmptyPrompt message="No Budget Planned" />}
 
-        <Doughnut
-          className="p-4"
-          data={{
-            labels: data.map((item) => item.label),
-            datasets: [
-              {
-                label: "My First Dataset",
-                data: data.map((item) => item.value),
-                backgroundColor: data.map((item) => item.color),
-                hoverOffset: 4,
-              },
-            ],
-          }}
-        />
+          <Doughnut
+            className="p-4"
+            data={{
+              labels: data.map((item) => item.label),
+              datasets: [
+                {
+                  label: "My First Dataset",
+                  data: data.map((item) => item.value),
+                  backgroundColor: data.map((item) => item.color),
+                  hoverOffset: 4,
+                },
+              ],
+            }}
+          />
+        </Loader>
       </Loader>
     </Container>
   );
