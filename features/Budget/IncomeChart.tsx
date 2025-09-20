@@ -24,8 +24,6 @@ const IncomeChart = () => {
       };
     });
 
-  console.log(data);
-
   return (
     <Container className="flex">
       <ContainerHeader>Income</ContainerHeader>

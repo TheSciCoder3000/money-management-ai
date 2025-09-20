@@ -78,7 +78,6 @@ const EditDialog: React.FC<EditDialogProps> = ({
   }, [reset, name, budget, color, type]);
 
   function onSubmit(values: formData) {
-    console.log({ values });
     if (!session) return;
     dispatch(
       updateCategories({

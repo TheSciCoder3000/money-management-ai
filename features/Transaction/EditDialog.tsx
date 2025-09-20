@@ -200,7 +200,6 @@ const EditDialog: React.FC<EditDialogProps> = ({
                 <Select
                   defaultValue={type}
                   onValueChange={(val) => {
-                    console.log("type: ", val);
                     setTransactionType(val as TransactionType);
                   }}
                   value={transactionType as string | undefined}

@@ -22,7 +22,6 @@ const MenuAccountCard: React.FC<MenuAccountCardProps> = ({ account }) => {
     <DropdownMenu
       open={open}
       onOpenChange={(state) => {
-        console.log(state);
         setOpen(state);
       }}
     >

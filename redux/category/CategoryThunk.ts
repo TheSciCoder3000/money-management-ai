@@ -58,7 +58,6 @@ interface UpdateArgs {
 export const updateCategories = createAsyncThunk(
   "categories/updateCategories",
   async ({ token, value }: UpdateArgs) => {
-    console.log({ value });
     const res = await fetch("/api/category", {
       method: "PUT",
       headers: {
