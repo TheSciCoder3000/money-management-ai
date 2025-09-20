@@ -47,8 +47,12 @@ const formSchema = yup.object({
 type formData = yup.InferType<typeof formSchema>;
 
 const AddDialog = () => {
-  const { accounts } = useAppSelector((state) => state.account);
-  const { categories } = useAppSelector((state) => state.category);
+  const { accounts, loading: accountLoading } = useAppSelector(
+    (state) => state.account,
+  );
+  const { categories, loading: categoryLoading } = useAppSelector(
+    (state) => state.category,
+  );
   const { loading } = useAppSelector((state) => state.transaction);
   const [transactionType, setTransactionType] =
     useState<TransactionType | null>(null);
@@ -71,6 +75,20 @@ const AddDialog = () => {
           message: "Select a target account different from main account",
         });
     }
+
+    const account = accounts.find((item) => item.id === values.account);
+    if (!account)
+      return form.setError("account", {
+        message: "Account does not exist, refresh",
+      });
+
+    if (
+      account.income - account.expenses < values.amount &&
+      transactionType === "expenses"
+    )
+      return form.setError("amount", {
+        message: `Your transaction is greater than your balance`,
+      });
 
     if (
       !categories.find(
@@ -112,7 +130,11 @@ const AddDialog = () => {
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger
-        disabled={loading === "pending"}
+        disabled={
+          loading === "pending" ||
+          accountLoading === "pending" ||
+          categoryLoading === "pending"
+        }
         className="flex aspect-square w-10 cursor-pointer items-center justify-center rounded-full hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
         <Plus className={clsx("stroke-3")} size={15} />

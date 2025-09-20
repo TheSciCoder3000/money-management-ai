@@ -11,6 +11,7 @@ import { cn, ParseCash } from "@/lib/utils";
 import { TableHead } from "@/components/ui/table";
 import clsx from "clsx";
 import AccountSelect from "@/components/TransactionTable/AccountSelect";
+import TransactionTypeSelect from "@/components/TransactionTable/TransactionTypeSelect";
 
 const TransactionList = ({
   className,
@@ -20,6 +21,8 @@ const TransactionList = ({
   const { categories } = useAppSelector((state) => state.category);
   const { transactions } = useAppSelector((state) => state.transaction);
   const [accountId, setAccountId] = useState<string | null>(null);
+  const [transactionType, setTransactionType] =
+    useState<TransactionType | null>(null);
   const dispatch = useAppDispatch();
 
   const items = transactions.map((item) => {
@@ -27,6 +30,7 @@ const TransactionList = ({
     const category = categories.find((cat) => cat.id === item.category_id);
     return {
       id: item.id,
+      target: accounts.find((acc) => acc.id === item.target_account_id),
       account: {
         id: account?.id || "",
         name: account?.name || "",
@@ -34,10 +38,10 @@ const TransactionList = ({
       category: {
         id: category?.id,
         name: category?.name,
+        type: category?.type,
       },
       note: item.note,
       amount: item.value,
-      type: item.type,
     };
   });
 
@@ -49,8 +53,11 @@ const TransactionList = ({
     const regex = new RegExp(query, "i");
     const matched = regex.test(item.id) || regex.test(item.note || "");
 
-    if (!accountId) return matched;
-    return item.account.id === accountId && matched;
+    const accountMatched = accountId === null || item.account.id === accountId;
+    const typeMatched =
+      transactionType === null || item.category.type === transactionType;
+
+    return accountMatched && matched && typeMatched;
   };
 
   return (
@@ -58,9 +65,15 @@ const TransactionList = ({
       items={items}
       Header={(key, indx) => {
         if (key === "id") return;
-
-        const headers = ["Invoice", "Account", "Category", "Note", "Amount"];
-        if (key === "type") return <></>;
+        if (key === "target") return;
+        const headers = [
+          "Invoice",
+          "target",
+          "Account",
+          "Category",
+          "Note",
+          "Amount",
+        ];
         return (
           <TableHead
             className={clsx(
@@ -75,8 +88,8 @@ const TransactionList = ({
       }}
       Filter={customFilter}
       render={(indx, value, key, TableCell, item) => {
+        if (key === "target") return;
         if (key === "id") return;
-        if (key === "type") return <></>;
         if (indx === 0)
           return (
             <TableCell className="max-w-[50px] overflow-hidden font-medium">
@@ -92,10 +105,19 @@ const TransactionList = ({
             <TableCell
               className={clsx(
                 "text-right",
-                item.type === "expenses" ? "text-red-500" : "text-green-600",
+                item.category.type === "income"
+                  ? "text-green-600"
+                  : "text-red-500",
               )}
             >
               {ParseCash(value as number)}
+            </TableCell>
+          );
+        if (item.category.type === "transfer")
+          return (
+            <TableCell>
+              <span className="font-bold">To {item.target?.name}:</span>{" "}
+              {value as string}
             </TableCell>
           );
         return <TableCell>{value as string}</TableCell>;
@@ -110,7 +132,8 @@ const TransactionList = ({
           account_id={item.account.id}
           amount={item.amount}
           note={item.note}
-          type={item.type}
+          type={item.category.type}
+          target={item.target?.id}
         />
       )}
       DeleteDialog={(item) => <DeleteDialog id={item.id} />}
@@ -121,7 +144,8 @@ const TransactionList = ({
             {ParseCash(
               invoices.reduce(
                 (prev, item) =>
-                  prev + item.amount * (item.type === "expenses" ? -1 : 1),
+                  prev +
+                  item.amount * (item.category.type === "expenses" ? -1 : 1),
                 0,
               ),
             )}
@@ -129,7 +153,12 @@ const TransactionList = ({
           <Cell />
         </>
       )}
-      Selects={<AccountSelect onChange={setAccountId} />}
+      Selects={
+        <>
+          <AccountSelect onChange={setAccountId} />
+          <TransactionTypeSelect onChange={setTransactionType} />
+        </>
+      }
       {...props}
     />
   );
