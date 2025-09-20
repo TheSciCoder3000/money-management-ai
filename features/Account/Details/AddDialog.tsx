@@ -36,12 +36,14 @@ import { useUser } from "@/components/UserProvider";
 import clsx from "clsx";
 import { fetchAccounts } from "@/redux/account/AccountThunk";
 import { fetchCategories } from "@/redux/category/CategoryThunk";
+import DatePicker from "@/components/DatePicker";
 
 const formSchema = yup.object({
   note: yup.string().required(),
   category: yup.string().required(),
   amount: yup.number().required(),
   target: yup.string().optional(),
+  date: yup.string().optional(),
 });
 
 type formData = yup.InferType<typeof formSchema>;
@@ -96,6 +98,7 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
           category_id: values.category,
           target_account_id: values.target ?? null,
           note: values.note,
+          created_at: values.date,
         },
       }),
     ).then(() => {
@@ -214,6 +217,22 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
                   />
                 </div>
               </div>
+
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date</FormLabel>
+                    <DatePicker
+                      onValueChange={(val) =>
+                        field.onChange(val?.toISOString())
+                      }
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               {transactionType === "transfer" && (
                 <FormField
