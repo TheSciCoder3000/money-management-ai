@@ -29,6 +29,7 @@ export async function POST(request: Request) {
     .from("transaction")
     .insert(accountData)
     .select<`*`, ITransactionDb>("*")
+    .order("created_at", { ascending: false })
     .single();
 
   if (error) {

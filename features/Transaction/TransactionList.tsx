@@ -141,7 +141,11 @@ const TransactionList = ({
               invoices.reduce(
                 (prev, item) =>
                   prev +
-                  item.amount * (item.category.type === "expenses" ? -1 : 1),
+                  item.amount *
+                    (item.category.type === "expenses" ||
+                    item.category.type === "transfer"
+                      ? -1
+                      : 1),
                 0,
               ),
             )}
