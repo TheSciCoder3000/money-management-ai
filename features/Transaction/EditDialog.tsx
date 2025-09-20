@@ -42,7 +42,6 @@ import { fetchAccounts } from "@/redux/account/AccountThunk";
 const formSchema = yup.object({
   account_id: yup.string().required(),
   category_id: yup.string().required(),
-  paymentMethod: yup.string().required().default("Cash"),
   note: yup.string().required(),
   amount: yup.number().min(0).required(),
   target: yup.string().optional(),
@@ -57,7 +56,6 @@ interface EditDialogProps extends Partial<formData> {
 const EditDialog: React.FC<EditDialogProps> = ({
   transaction_id,
   account_id,
-  paymentMethod,
   category_id,
   type,
   note,
@@ -81,7 +79,6 @@ const EditDialog: React.FC<EditDialogProps> = ({
     resolver: yupResolver(formSchema) as Resolver<formData>,
     defaultValues: {
       account_id,
-      paymentMethod,
       note,
       amount,
       category_id,
@@ -134,8 +131,8 @@ const EditDialog: React.FC<EditDialogProps> = ({
   }, [open]);
 
   useEffect(() => {
-    reset({ account_id, category_id, paymentMethod, note, amount, target });
-  }, [reset, account_id, category_id, paymentMethod, note, amount, target]);
+    reset({ account_id, category_id, note, amount, target });
+  }, [reset, account_id, category_id, note, amount, target]);
 
   return (
     <Drawer direction="right" open={open} onOpenChange={setOpen}>
