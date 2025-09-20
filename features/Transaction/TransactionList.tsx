@@ -12,6 +12,7 @@ import { TableHead } from "@/components/ui/table";
 import clsx from "clsx";
 import AccountSelect from "@/components/TransactionTable/AccountSelect";
 import TransactionTypeSelect from "@/components/TransactionTable/TransactionTypeSelect";
+import { format } from "date-fns";
 
 const TransactionList = ({
   className,
@@ -40,6 +41,7 @@ const TransactionList = ({
         name: category?.name,
         type: category?.type,
       },
+      date: item.created_at,
       note: item.note,
       amount: item.value,
     };
@@ -67,6 +69,7 @@ const TransactionList = ({
           "target",
           "Account",
           "Category",
+          "Date",
           "Note",
           "Amount",
         ];
@@ -96,6 +99,12 @@ const TransactionList = ({
           return <TableCell>{(value as AccountType).name}</TableCell>;
         if (key === "category")
           return <TableCell>{(value as { name: string }).name}</TableCell>;
+        if (key === "date")
+          return (
+            <TableCell className="text-gray-400">
+              {format(new Date(value as string), "MMM dd, yyyy")}
+            </TableCell>
+          );
         if (key === "amount")
           return (
             <TableCell
@@ -135,19 +144,17 @@ const TransactionList = ({
       DeleteDialog={(item) => <DeleteDialog id={item.id} />}
       Footer={(invoices, Cell) => (
         <>
-          <Cell colSpan={3}>Total</Cell>
+          <Cell colSpan={4}>Total</Cell>
           <Cell className="text-right">
             {ParseCash(
-              invoices.reduce(
-                (prev, item) =>
-                  prev +
-                  item.amount *
-                    (item.category.type === "expenses" ||
-                    item.category.type === "transfer"
-                      ? -1
-                      : 1),
-                0,
-              ),
+              invoices
+                .filter((item) => item.category.type !== "transfer")
+                .reduce(
+                  (prev, item) =>
+                    prev +
+                    item.amount * (item.category.type === "expenses" ? -1 : 1),
+                  0,
+                ),
             )}
           </Cell>
           <Cell />

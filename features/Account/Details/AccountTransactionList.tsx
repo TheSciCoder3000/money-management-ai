@@ -11,6 +11,7 @@ import EditDialog from "./EditDialog";
 import DeleteDialog from "@/features/Transaction/DeleteDialog";
 import TransactionTypeSelect from "@/components/TransactionTable/TransactionTypeSelect";
 import { fetchTransactons } from "@/redux/transaction/TransactionThunk";
+import { format } from "date-fns";
 
 interface AccountTransactionListProps {
   account: IAccountDb;
@@ -26,11 +27,15 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
     useState<TransactionType | null>(null);
 
   const items = transactions
-    .filter((item) => item.account_id === account.id)
+    .filter(
+      (item) =>
+        item.account_id === account.id || item.target_account_id === account.id,
+    )
     .map((item) => ({
       id: item.id,
       target: accounts.find((acc) => acc.id === item.target_account_id),
       category: categories.find((cat) => cat.id === item.category_id),
+      date: item.created_at,
       note: item.note,
       amount: item.value,
     }));
@@ -59,7 +64,7 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
             )}
             key={indx}
           >
-            {["Invoice", "target", "Category", "Note", "Amount"][indx]}
+            {["Invoice", "target", "Category", "Date", "Note", "Amount"][indx]}
           </TableHead>
         );
       }}
@@ -73,12 +78,19 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
             <TableCell
               className={clsx(
                 "text-right",
-                item.category?.type === "income"
+                item.category?.type === "income" ||
+                  item.target?.id === account.id
                   ? "text-green-600"
                   : "text-red-500",
               )}
             >
               {ParseCash(value as number)}
+            </TableCell>
+          );
+        if (key === "date")
+          return (
+            <TableCell className="text-gray-400">
+              {format(new Date(value as string), "MMM dd, yyyy")}
             </TableCell>
           );
         if (item.category?.type === "transfer")
@@ -107,17 +119,17 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
       DeleteDialog={(item) => <DeleteDialog id={item.id} />}
       Footer={(invoices, Cell) => (
         <>
-          <Cell colSpan={2}>Total</Cell>
+          <Cell colSpan={3}>Total</Cell>
           <Cell className="text-right">
             {ParseCash(
               invoices.reduce(
                 (prev, item) =>
                   prev +
                   item.amount *
-                    (item.category?.type === "expenses" ||
-                    item.category?.type === "transfer"
-                      ? -1
-                      : 1),
+                    (item.category?.type === "income" ||
+                    item.target?.id === account.id
+                      ? 1
+                      : -1),
                 0,
               ),
             )}
