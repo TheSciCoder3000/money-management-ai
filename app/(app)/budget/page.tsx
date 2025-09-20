@@ -1,5 +1,7 @@
 import BudgetChart from "@/features/Budget/BudgetChart";
 import BudgetTable from "@/features/Budget/BudgetTable";
+import ExpensesChart from "@/features/Budget/ExpensesChart";
+import IncomeChart from "@/features/Budget/IncomeChart";
 import React from "react";
 
 const Budget = () => {
@@ -9,6 +11,8 @@ const Budget = () => {
       <div className="grid grid-cols-4 grid-rows-3 gap-4">
         <BudgetTable />
         <BudgetChart />
+        <ExpensesChart />
+        <IncomeChart />
       </div>
     </div>
   );

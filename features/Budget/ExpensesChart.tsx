@@ -11,11 +11,11 @@ import ContainerHeader from "../Dashboard/ContainerHeader";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const BudgetChart = () => {
+const ExpensesChart = () => {
   const { categories, loading } = useAppSelector((state) => state.category);
   const data = categories
-    .filter((item) => item.budget)
-    .sort((a, b) => (b.budget as number) - (a.budget as number))
+    .filter((item) => item.type === "expenses" && item.total > 0)
+    .sort((a, b) => (b.total as number) - (a.total as number))
     .map((item) => {
       return {
         label: item.name,
@@ -26,11 +26,11 @@ const BudgetChart = () => {
 
   return (
     <Container className="flex">
-      <ContainerHeader>Budget</ContainerHeader>
+      <ContainerHeader>Income</ContainerHeader>
       <Loader loading={loading === "pending"}>
         <Loader loading={loading === "pending"}>
           {data.length === 0 ? (
-            <EmptyPrompt message="No Budget Planned" />
+            <EmptyPrompt message="No Expenses" />
           ) : (
             <Doughnut
               className="p-4"
@@ -53,4 +53,4 @@ const BudgetChart = () => {
   );
 };
 
-export default BudgetChart;
+export default ExpensesChart;
