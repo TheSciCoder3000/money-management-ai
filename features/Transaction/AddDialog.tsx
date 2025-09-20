@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -40,8 +40,8 @@ const formSchema = yup.object({
   note: yup.string().required(),
   category: yup.string().required(),
   account: yup.string().required(),
-  type: yup.string().required(),
   amount: yup.number().required(),
+  target: yup.string().optional(),
 });
 
 type formData = yup.InferType<typeof formSchema>;
@@ -60,6 +60,24 @@ const AddDialog = () => {
   const { session } = useUser();
 
   const onSubmit = (values: formData) => {
+    if (transactionType === "transfer") {
+      if (!values.target)
+        return form.setError("target", {
+          message: "Select a valid target account",
+        });
+
+      if (values.target === values.account)
+        return form.setError("target", {
+          message: "Select a target account different from main account",
+        });
+    }
+
+    if (
+      !categories.find(
+        (item) => item.id === values.category && item.type === transactionType,
+      )
+    )
+      return form.setError("category", { message: "Select valid category" });
     dispatch(
       addTransactons({
         token: session?.access_token,
@@ -67,8 +85,8 @@ const AddDialog = () => {
           account_id: values.account,
           value: values.amount,
           category_id: values.category,
-          type: values.type as TransactionType,
           note: values.note,
+          target_account_id: values.target || null,
         },
       }),
     ).then(() => {
@@ -82,6 +100,14 @@ const AddDialog = () => {
     if (loading === "pending") setOpen(false);
     else setOpen(state);
   };
+
+  useEffect(() => {
+    if (!open) {
+      form.reset();
+      setTransactionType(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
@@ -134,36 +160,28 @@ const AddDialog = () => {
                 </div>
 
                 <div className="col-span-6">
-                  <FormField
-                    control={form.control}
-                    name="type"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Type</FormLabel>
-                        <Select
-                          {...field}
-                          onValueChange={(val) => {
-                            field.onChange(val);
-                            setTransactionType(val as TransactionType);
-                          }}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {["income", "expenses", "transfer"].map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <FormItem>
+                    <FormLabel>Type</FormLabel>
+                    <Select
+                      onValueChange={(val: TransactionType) =>
+                        setTransactionType(val)
+                      }
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {["income", "expenses", "transfer"].map((item) => (
+                          <SelectItem key={item} value={item}>
+                            {item}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
                 </div>
               </div>
 
@@ -220,6 +238,36 @@ const AddDialog = () => {
                   />
                 </div>
               </div>
+
+              {transactionType === "transfer" && (
+                <FormField
+                  control={form.control}
+                  name="target"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Target Account</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Account Type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {accounts.map((item) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
 
               <FormField
                 control={form.control}
