@@ -35,6 +35,7 @@ import { addTransactons } from "@/redux/transaction/TransactionThunk";
 import { useUser } from "../../components/UserProvider";
 import clsx from "clsx";
 import { fetchAccounts } from "@/redux/account/AccountThunk";
+import { fetchCategories } from "@/redux/category/CategoryThunk";
 
 const formSchema = yup.object({
   note: yup.string().required(),
@@ -109,6 +110,7 @@ const AddDialog = () => {
       }),
     ).then(() => {
       dispatch(fetchAccounts());
+      dispatch(fetchCategories());
     });
     form.reset();
     setOpen(false);

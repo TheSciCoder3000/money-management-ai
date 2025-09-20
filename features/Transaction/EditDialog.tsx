@@ -38,6 +38,7 @@ import { Input } from "../../components/ui/input";
 import { updateTransaction } from "@/redux/transaction/TransactionThunk";
 import { useUser } from "../../components/UserProvider";
 import { fetchAccounts } from "@/redux/account/AccountThunk";
+import { fetchCategories } from "@/redux/category/CategoryThunk";
 
 const formSchema = yup.object({
   account_id: yup.string().required(),
@@ -118,7 +119,10 @@ const EditDialog: React.FC<EditDialogProps> = ({
           target_account_id: values.target,
         },
       }),
-    ).then(() => dispatch(fetchAccounts()));
+    ).then(() => {
+      dispatch(fetchAccounts());
+      dispatch(fetchCategories());
+    });
     setOpen(false);
   }
 

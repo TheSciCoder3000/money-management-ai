@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { deleteTransaction } from "@/redux/transaction/TransactionThunk";
 import { useUser } from "../../components/UserProvider";
 import { fetchAccounts } from "@/redux/account/AccountThunk";
+import { fetchCategories } from "@/redux/category/CategoryThunk";
 
 interface DeleteDialogProps {
   id: string;
@@ -29,7 +30,10 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ id }) => {
     if (!session) return;
     dispatch(
       deleteTransaction({ token: session.access_token, value: { id } }),
-    ).then(() => dispatch(fetchAccounts()));
+    ).then(() => {
+      dispatch(fetchAccounts());
+      dispatch(fetchCategories());
+    });
     setOpen(false);
   };
 
