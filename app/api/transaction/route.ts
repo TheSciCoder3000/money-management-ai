@@ -68,7 +68,10 @@ export async function DELETE(request: Request) {
     .delete()
     .eq("id", bodyData.id);
 
-  if (error) return ParseErrorJson("failed to delete", 500);
+  if (error) {
+    console.error(error.message);
+    return ParseErrorJson("failed to delete", 500);
+  }
 
   return ParseJson({ id: bodyData.id }, 200);
 }
