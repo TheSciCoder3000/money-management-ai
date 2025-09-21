@@ -74,6 +74,11 @@ const AddDialog: React.FC<AddDialogProps> = ({ account }) => {
         return form.setError("target", {
           message: "Select a valid target account",
         });
+
+      if (values.target === account.id)
+        return form.setError("target", {
+          message: "Select a target account different from the current account",
+        });
     }
     if (
       account.income - account.expenses < values.amount &&

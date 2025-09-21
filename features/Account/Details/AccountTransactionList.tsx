@@ -11,9 +11,10 @@ import EditDialog from "./EditDialog";
 import DeleteDialog from "@/features/Transaction/DeleteDialog";
 import TransactionTypeSelect from "@/components/TransactionTable/TransactionTypeSelect";
 import { fetchTransactons } from "@/redux/transaction/TransactionThunk";
-import { format } from "date-fns";
+import { compareDesc, format, parseISO } from "date-fns";
 import DateRangePicker from "@/components/DateRangePicker";
 import { DateRange } from "react-day-picker";
+import { ArrowRight } from "lucide-react";
 
 interface AccountTransactionListProps {
   account: IAccountDb;
@@ -34,8 +35,10 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
       (item) =>
         item.account_id === account.id || item.target_account_id === account.id,
     )
+    .sort((a, b) => compareDesc(parseISO(a.created_at), parseISO(b.created_at)))
     .map((item) => ({
       id: item.id,
+      account: accounts.find((acc) => acc.id === item.account_id),
       target: accounts.find((acc) => acc.id === item.target_account_id),
       category: categories.find((cat) => cat.id === item.category_id),
       date: item.created_at,
@@ -67,23 +70,30 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
     <TransactionTable
       items={items}
       Header={(key, indx) => {
-        if (key === "id") return <></>;
-        if (key === "target") return;
+        if (["id", "target", "account"].includes(key)) return;
+        const cols = [
+          "Invoice",
+          "target",
+          "account",
+          "Category",
+          "Date",
+          "Note",
+          "Amount",
+        ];
         return (
           <TableHead
             className={clsx(
               indx === 0 && "max-w-[50px]",
-              indx > 3 && "text-right",
+              indx === cols.length - 1 && "text-right",
             )}
             key={indx}
           >
-            {["Invoice", "target", "Category", "Date", "Note", "Amount"][indx]}
+            {cols[indx]}
           </TableHead>
         );
       }}
       render={(indx, value, key, DataCell, item) => {
-        if (key === "id") return <></>;
-        if (key === "target") return;
+        if (["id", "target", "account"].includes(key)) return;
         if (key === "category")
           return <TableCell>{(value as ICategoryDb | null)?.name}</TableCell>;
         if (key === "amount")
@@ -109,7 +119,10 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
         if (item.category?.type === "transfer")
           return (
             <TableCell>
-              <span className="font-bold">To {item.target?.name}:</span>{" "}
+              <span className="font-bold">
+                {item.account?.name}
+                <ArrowRight className="inline" size={12} /> {item.target?.name}:
+              </span>{" "}
               {value as string}
             </TableCell>
           );

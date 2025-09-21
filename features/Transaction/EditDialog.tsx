@@ -107,6 +107,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
       )
     )
       return form.setError("category_id", { message: "Select valid category" });
+
     dispatch(
       updateTransaction({
         token: session.access_token,
@@ -117,7 +118,7 @@ const EditDialog: React.FC<EditDialogProps> = ({
           note: values.note,
           value: values.amount,
           target_account_id:
-            transactionType === "expenses" ? values.target : null,
+            transactionType === "transfer" ? values.target : null,
         },
       }),
     ).then(() => {
