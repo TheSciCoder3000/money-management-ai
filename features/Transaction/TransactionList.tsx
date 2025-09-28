@@ -7,7 +7,7 @@ import TransactionTable from "@/components/TransactionTable";
 import DeleteDialog from "@/features/Transaction/DeleteDialog";
 import EditDialog from "@/features/Transaction/EditDialog";
 import AddDialog from "@/features/Transaction/AddDialog";
-import { cn, isBeforeOrEqual, ParseCash } from "@/lib/utils";
+import { cn, ParseCash } from "@/lib/utils";
 import { TableHead } from "@/components/ui/table";
 import clsx from "clsx";
 import AccountSelect from "@/components/TransactionTable/AccountSelect";
@@ -15,6 +15,7 @@ import TransactionTypeSelect from "@/components/TransactionTable/TransactionType
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import DateRangePicker from "@/components/DateRangePicker";
+import { isBeforeOrEqual } from "@/lib/date-utils";
 
 const TransactionList = ({
   className,
@@ -126,7 +127,9 @@ const TransactionList = ({
                 "text-right",
                 item.category.type === "income"
                   ? "text-green-600"
-                  : "text-red-500",
+                  : item.category.type === "expenses"
+                    ? "text-red-500"
+                    : "text-gray-500",
               )}
             >
               {ParseCash(value as number)}
