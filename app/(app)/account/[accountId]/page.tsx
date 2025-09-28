@@ -16,7 +16,7 @@ async function AccountDetails({ params }: PageProps<"/account/[accountId]">) {
       <PageBreadcrumb title={account.name} />
       <div className="grid grid-cols-4 gap-4">
         <Container className="col-span-3 flex items-center">
-          <IncomeExpenseChart />
+          <IncomeExpenseChart account={account} />
         </Container>
         <AccountDetail account={account} />
         <AccountTransactionList account={account} />

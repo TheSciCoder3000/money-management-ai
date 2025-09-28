@@ -5,7 +5,7 @@ import clsx from "clsx";
 import TransactionTable from "@/components/TransactionTable";
 import { TableCell, TableHead } from "@/components/ui/table";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { isBeforeOrEqual, ParseCash } from "@/lib/utils";
+import { ParseCash } from "@/lib/utils";
 import AddDialog from "./AddDialog";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "@/features/Transaction/DeleteDialog";
@@ -15,6 +15,7 @@ import { compareDesc, format, parseISO } from "date-fns";
 import DateRangePicker from "@/components/DateRangePicker";
 import { DateRange } from "react-day-picker";
 import { ArrowRight } from "lucide-react";
+import { isBeforeOrEqual } from "@/lib/date-utils";
 
 interface AccountTransactionListProps {
   account: IAccountDb;
