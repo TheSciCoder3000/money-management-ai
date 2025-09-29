@@ -3,7 +3,7 @@ import React from "react";
 
 async function Account() {
   return (
-    <div className="p-7">
+    <div className="min-h-screen p-7">
       <h1 className="mb-8 text-4xl">Account</h1>
       <AccountList />
     </div>

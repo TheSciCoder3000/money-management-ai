@@ -1,5 +1,4 @@
 import AccountList from "@/features/Dashboard/AccountList";
-import Controls from "@/features/Dashboard/Controls";
 import BudgetBreakdown from "@/features/Dashboard/BudgetBreakdown";
 import IncomeExpensesChart from "@/features/Dashboard/IncomeExpensesChart";
 import OverviewCard from "@/features/Dashboard/OverviewCard";
@@ -15,7 +14,6 @@ export default function Home() {
       <BudgetBreakdown />
       <RecentTransaction />
       <AccountList />
-      <Controls />
     </div>
   );
 }

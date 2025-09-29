@@ -26,3 +26,33 @@ export async function GetAccount(id: string) {
 
   return data;
 }
+
+export interface AccountCreationParameters {
+  name: string;
+  income: number;
+  expenses: number;
+  type: string;
+}
+export async function CreateAccount(accountData: AccountCreationParameters) {
+  const supabase = await createClient();
+  const user_id = (await supabase.auth.getUser()).data.user?.id;
+
+  if (!user_id) throw new Error("no user");
+
+  const { data, error } = await supabase
+    .rpc("add_account_and_transaction", {
+      name: accountData.name,
+      user_id,
+      income: accountData.income,
+      expenses: accountData.expenses,
+      type: accountData.type,
+    })
+    .single<IAccountDb>();
+
+  if (error) {
+    console.error(`Error: ${error.message}`);
+    throw new Error("Unable to create account");
+  }
+
+  return data;
+}

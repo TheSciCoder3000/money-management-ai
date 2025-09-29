@@ -2,6 +2,7 @@ import { UserProvider } from "@/components/UserProvider";
 import Navbar from "@/features/Navbar/Navbar";
 import React from "react";
 import StoreProvider from "@/redux/StoreProvider";
+import Controls from "@/features/Dashboard/Controls";
 
 function Layout({ children }: LayoutProps<"/">) {
   return (
@@ -9,7 +10,10 @@ function Layout({ children }: LayoutProps<"/">) {
       <UserProvider>
         <div className="flex h-screen w-screen overflow-hidden bg-gray-100/70">
           <Navbar />
-          <div className="max-h-screen flex-1 overflow-auto">{children}</div>
+          <div className="relative max-h-screen flex-1 overflow-auto">
+            {children}
+            <Controls />
+          </div>
         </div>
       </UserProvider>
     </StoreProvider>

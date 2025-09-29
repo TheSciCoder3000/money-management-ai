@@ -100,6 +100,9 @@ const IncomeExpensesChart: React.FC<IncomeExpensesChartProps> = ({
     scales: {
       y: {
         min: 0,
+        ticks: {
+          maxTicksLimit: 10,
+        },
       },
     },
     plugins: {

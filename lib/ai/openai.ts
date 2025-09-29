@@ -1,27 +1,103 @@
 import OpenAI from "openai";
+import { AccountCreationParameters } from "../supabase/account";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY! });
 
-export async function RunPrompt(prmpt: string) {
-  const prompt = `
-    ${prmpt}.
-    parse the prompt into
-    {
-      amount: number;
-      note: string;
-      account: "Cash" | "Bank"
-    }
-    Cash by default
-    Respond only in json.
-  `;
+const prompt = (
+  income_cat: string,
+  expenses_cat: string,
+  transfer_cat: string,
+  accounts: string,
+) => ({
+  // id: "pmpt_68da601ce40081969593c185448136af03cfc2063c0a8572",
+  // version: "7",
+  id: "pmpt_68da895aad40819084977e7d444afd3002ee4d719a3874dd",
+  version: "5",
+  variables: {
+    income_cat,
+    expenses_cat,
+    transfer_cat,
+    accounts,
+  },
+});
 
+export async function RunPrompt(prmpt: string) {
   const result = await openai.responses.create({
     model: "gpt-5-nano",
-    input: prompt,
+    prompt: prompt("", "", "", ""),
+    input: [
+      {
+        role: "user",
+        content: prmpt,
+      },
+    ],
     store: true,
   });
   const text = result.output_text;
 
   console.log(text);
   return text;
+}
+
+interface TransactionFunctionCall {
+  name: "create_transaction";
+  arguments: {
+    note: string;
+    amount: number;
+    datetime: string;
+    category: string;
+    account: string;
+    target_account?: string;
+    type: TransactionType;
+  };
+}
+
+interface AccountFunctionCall {
+  name: "create_account";
+  arguments: AccountCreationParameters;
+}
+
+export async function AnalyzePrompt(
+  prmpt: string,
+  accounts: { id: string; name: string }[],
+  categories: { id: string; name: string; type: TransactionType }[],
+): Promise<AccountFunctionCall | TransactionFunctionCall | null> {
+  const result = await openai.responses.create({
+    model: "gpt-4.1-nano",
+    prompt: prompt(
+      JSON.stringify(
+        categories
+          .filter((item) => item.type === "income")
+          .map((item) => item.name),
+      ),
+      JSON.stringify(
+        categories
+          .filter((item) => item.type === "expenses")
+          .map((item) => item.name),
+      ),
+      JSON.stringify(
+        categories
+          .filter((item) => item.type === "transfer")
+          .map((item) => item.name),
+      ),
+      JSON.stringify(accounts.map((item) => item.name)),
+    ),
+    input: [
+      {
+        role: "user",
+        content: prmpt,
+      },
+    ],
+    store: true,
+    service_tier: "priority",
+  });
+
+  const text = result.output[0] as {
+    name: "create_account" | "create_transaction";
+    arguments: string;
+  };
+  return {
+    ...text,
+    arguments: JSON.parse(text.arguments as string),
+  };
 }
