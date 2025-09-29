@@ -12,7 +12,7 @@ const prompt = (
   // id: "pmpt_68da601ce40081969593c185448136af03cfc2063c0a8572",
   // version: "7",
   id: "pmpt_68da895aad40819084977e7d444afd3002ee4d719a3874dd",
-  version: "5",
+  version: "6",
   variables: {
     income_cat,
     expenses_cat,
