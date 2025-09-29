@@ -30,8 +30,10 @@ const Controls = () => {
         const { data } = (await res.json()) as {
           data: { method: "transaction" | "account" };
         };
-        if (data.method === "transaction") dispatch(fetchTransactons());
-        else if (data.method === "account") dispatch(fetchAccounts());
+        if (data.method === "transaction") {
+          dispatch(fetchTransactons());
+          dispatch(fetchAccounts());
+        } else if (data.method === "account") dispatch(fetchAccounts());
         toast(
           <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
             <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -48,28 +50,27 @@ const Controls = () => {
 
   return (
     <div className="sticky bottom-7 left-[50%] col-span-4 mb-4 flex h-fit w-fit -translate-x-[50%] justify-center">
-      <form
-        onSubmit={handlePromptSubmit}
-        className="z-5 flex h-fit w-fit items-center gap-2 rounded-full bg-white p-1 shadow-lg"
-      >
+      <div className="z-5 flex h-fit w-fit items-center gap-2 rounded-full bg-white p-1 shadow-lg">
         <AddDialog />
-        <div className="w-[30rem]">
-          <input
-            placeholder="Add transactions or accounts here"
+        <form onSubmit={handlePromptSubmit} className="flex items-center">
+          <div className="w-[30rem]">
+            <input
+              placeholder="Add transactions or accounts here"
+              disabled={sending}
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              className="block w-full border-none text-gray-500 outline-none disabled:text-gray-500"
+            />
+          </div>
+          <button
             disabled={sending}
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            className="block w-full border-none text-gray-500 outline-none disabled:text-gray-500"
-          />
-        </div>
-        <button
-          disabled={sending}
-          type="submit"
-          className="cursor-pointer rounded-full p-2 hover:bg-gray-100 disabled:text-gray-400"
-        >
-          <MdSend size={15} />
-        </button>
-      </form>
+            type="submit"
+            className="cursor-pointer rounded-full p-2 hover:bg-gray-100 disabled:text-gray-400"
+          >
+            <MdSend size={15} />
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

@@ -40,7 +40,7 @@ const transactionSlice = createSlice({
     });
     builder.addCase(addTransactons.fulfilled, (state, action) => {
       state.loading = "succeeded";
-      state.transactions = [action.payload, ...state.transactions];
+      state.transactions = [...action.payload, ...state.transactions];
     });
 
     builder.addCase(updateTransaction.pending, (state) => {

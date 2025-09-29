@@ -48,7 +48,7 @@ export const addTransactons = createAsyncThunk(
       },
       body: JSON.stringify(value),
     });
-    const { data } = (await res.json()) as { data: ITransactionDb };
+    const { data } = (await res.json()) as { data: ITransactionDb[] };
     return data;
   },
 );

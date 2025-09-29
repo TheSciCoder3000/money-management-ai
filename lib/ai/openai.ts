@@ -57,11 +57,12 @@ interface AccountFunctionCall {
   arguments: AccountCreationParameters;
 }
 
+type PromptReturnType = TransactionFunctionCall | AccountFunctionCall;
 export async function AnalyzePrompt(
   prmpt: string,
   accounts: { id: string; name: string }[],
   categories: { id: string; name: string; type: TransactionType }[],
-): Promise<AccountFunctionCall | TransactionFunctionCall | null> {
+): Promise<PromptReturnType[] | null> {
   const result = await openai.responses.create({
     model: "gpt-4.1-nano",
     prompt: prompt(
@@ -92,12 +93,13 @@ export async function AnalyzePrompt(
     service_tier: "priority",
   });
 
-  const text = result.output[0] as {
+  const text = result.output as {
     name: "create_account" | "create_transaction";
     arguments: string;
-  };
-  return {
-    ...text,
-    arguments: JSON.parse(text.arguments as string),
-  };
+  }[];
+
+  return text.map((item) => ({
+    ...item,
+    arguments: JSON.parse(item.arguments),
+  }));
 }

@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   };
 
   try {
-    const data = await CreateTransaction(accountData);
+    const data = await CreateTransaction([accountData]);
     return ParseJson(data, 200);
   } catch (error) {
     if (error instanceof Error) {

@@ -17,27 +17,34 @@ export async function POST(reqeust: Request) {
     }));
 
     const res = await AnalyzePrompt(prompt, accounts, categories);
-
     if (!res) throw new Error("function call is null");
 
-    if (res.name === "create_transaction") {
-      await CreateTransaction({
-        note: res.arguments.note,
-        value: res.arguments.amount,
-        // created_at: res.arguments.datetime,
-        account_id: rawAcc.find((item) => item.name === res.arguments.account)
-          ?.id,
-        category_id: rawCat.find(
-          (item) =>
-            item.name === res.arguments.category &&
-            item.type === res.arguments.type,
-        )?.id,
-        target_account_id: rawCat.find(
-          (item) =>
-            item.name === res.arguments.target_account &&
-            item.type === res.arguments.type,
-        )?.id,
-      });
+    const transactionFuncs = res.filter(
+      (item) => item.name === "create_transaction",
+    );
+    const accountFuncs = res.filter((item) => item.name === "create_account");
+
+    console.log({ transactionFuncs, accountFuncs });
+
+    if (transactionFuncs.length > 0) {
+      await CreateTransaction(
+        transactionFuncs.map((trans) => ({
+          note: trans.arguments.note,
+          value: trans.arguments.amount,
+          // created_at: res.arguments.datetime,
+          account_id: rawAcc.find(
+            (item) => item.name === trans.arguments.account,
+          )?.id,
+          category_id: rawCat.find(
+            (item) =>
+              item.name === trans.arguments.category &&
+              item.type === trans.arguments.type,
+          )?.id,
+          target_account_id: rawAcc.find(
+            (item) => item.name === trans.arguments.target_account,
+          )?.id,
+        })),
+      );
 
       return Response.json(
         {
@@ -47,13 +54,16 @@ export async function POST(reqeust: Request) {
         },
         { status: 200 },
       );
-    } else if (res.name === "create_account") {
-      await CreateAccount({
-        name: res.arguments.name,
-        income: 0,
-        expenses: 0,
-        type: res.arguments.type,
-      });
+    } else if (accountFuncs.length > 0) {
+      for (let i = 0; i < accountFuncs.length; i++) {
+        const acc = accountFuncs[i];
+        await CreateAccount({
+          name: acc.arguments.name,
+          income: 0,
+          expenses: 0,
+          type: acc.arguments.type,
+        });
+      }
       return Response.json(
         {
           data: {

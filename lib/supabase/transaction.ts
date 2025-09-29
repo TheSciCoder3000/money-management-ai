@@ -1,19 +1,20 @@
 import { createClient } from "./server";
 
 export async function CreateTransaction(
-  transactionData: Partial<ITransactionDb>,
+  transactionData: Partial<ITransactionDb>[],
 ) {
   const supabase = await createClient();
   const user_id = (await supabase.auth.getUser()).data.user?.id;
 
   if (!user_id) throw new Error("no user");
 
+  console.log({ transactionData });
+
   const { data, error } = await supabase
     .from("transaction")
-    .insert({ ...transactionData, user_id })
+    .insert(transactionData.map((item) => ({ ...item, user_id })))
     .select<`*`, ITransactionDb>("*")
-    .order("created_at", { ascending: false })
-    .single();
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error(`Error: ${error.message}`);
