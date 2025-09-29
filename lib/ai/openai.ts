@@ -12,7 +12,7 @@ const prompt = (
   // id: "pmpt_68da601ce40081969593c185448136af03cfc2063c0a8572",
   // version: "7",
   id: "pmpt_68da895aad40819084977e7d444afd3002ee4d719a3874dd",
-  version: "6",
+  version: "7",
   variables: {
     income_cat,
     expenses_cat,
@@ -66,22 +66,23 @@ export async function AnalyzePrompt(
   const result = await openai.responses.create({
     model: "gpt-4.1-nano",
     prompt: prompt(
-      JSON.stringify(
-        categories
-          .filter((item) => item.type === "income")
-          .map((item) => item.name),
-      ),
-      JSON.stringify(
-        categories
-          .filter((item) => item.type === "expenses")
-          .map((item) => item.name),
-      ),
-      JSON.stringify(
-        categories
-          .filter((item) => item.type === "transfer")
-          .map((item) => item.name),
-      ),
-      JSON.stringify(accounts.map((item) => item.name)),
+      `${categories
+        .filter((item) => item.type === "income")
+        .map((c) => `  <category>${c.name}</category>`)
+        .join("\n")}
+      `,
+      `${categories
+        .filter((item) => item.type === "expenses")
+        .map((c) => `  <category>${c.name}</category>`)
+        .join("\n")}
+      `,
+      `${categories
+        .filter((item) => item.type === "transfer")
+        .map((c) => `  <category>${c.name}</category>`)
+        .join("\n")}
+      `,
+      `${accounts.map((a) => `  <account>${a.name}</account>`).join("\n")}
+      `,
     ),
     input: [
       {

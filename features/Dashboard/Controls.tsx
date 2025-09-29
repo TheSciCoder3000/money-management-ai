@@ -34,15 +34,17 @@ const Controls = () => {
           dispatch(fetchTransactons());
           dispatch(fetchAccounts());
         } else if (data.method === "account") dispatch(fetchAccounts());
-        toast(
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>,
-        );
+        // toast(
+        //   <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+        //     <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        //   </pre>,
+        // );
+        toast.info(`${data.method} created successfully`);
         setPrompt("");
       }
     } catch (e) {
       if (e instanceof Error) console.error(e.message);
+      toast.error("Unable to follow command");
     } finally {
       setSending(false);
     }
