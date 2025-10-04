@@ -12,9 +12,13 @@ import { cn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
 
 interface DatePickerProps {
+  className?: string;
   onValueChange?: (date: DateRange | undefined) => void;
 }
-const DateRangePicker: React.FC<DatePickerProps> = ({ onValueChange }) => {
+const DateRangePicker: React.FC<DatePickerProps> = ({
+  onValueChange,
+  className,
+}) => {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState<DateRange | undefined>(undefined);
 
@@ -29,8 +33,9 @@ const DateRangePicker: React.FC<DatePickerProps> = ({ onValueChange }) => {
         <Button
           variant={"outline"}
           className={cn(
-            "w-fit pl-3 text-left font-normal",
+            "pl-3 text-left font-normal",
             !date && "text-muted-foreground",
+            className,
           )}
         >
           {date?.from && date?.to ? (

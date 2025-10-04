@@ -49,21 +49,26 @@ const TransactionTable = <T extends { id: string }>({
 
   return (
     <Container className={cn("h-fit min-h-full", className)} {...props}>
-      <div className="flex gap-2">
+      <div className="grid grid-cols-4 gap-2 md:flex">
         {AddDialog && AddDialog}
+
         <Button
           variant="outline"
           onClick={handleRefresh}
-          className="cursor-pointer"
+          className="col-span-1 cursor-pointer"
         >
           <RefreshCw />
         </Button>
+
         <Input
+          className="col-span-full row-start-1"
           placeholder="Filter By..."
           onChange={(e) => setQuery(e.target.value)}
         />
+
         {Selects && Selects}
       </div>
+
       <MainTable
         Header={Header}
         render={render}

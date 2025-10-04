@@ -179,9 +179,15 @@ const TransactionList = ({
       )}
       Selects={
         <>
-          <AccountSelect onChange={setAccountId} />
-          <TransactionTypeSelect onChange={setTransactionType} />
-          <DateRangePicker onValueChange={setDateRange} />
+          <AccountSelect className="col-span-2" onChange={setAccountId} />
+          <TransactionTypeSelect
+            className="col-span-2"
+            onChange={setTransactionType}
+          />
+          <DateRangePicker
+            className="col-span-2"
+            onValueChange={setDateRange}
+          />
         </>
       }
       {...props}

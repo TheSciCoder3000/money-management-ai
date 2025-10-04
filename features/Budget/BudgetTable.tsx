@@ -32,7 +32,7 @@ const BudgetTable = () => {
   }));
 
   return (
-    <div className="col-span-3 row-span-3">
+    <div className="row-span-3 lg:col-span-3">
       <TransactionTable
         items={items}
         Header={(key, indx) => {

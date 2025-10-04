@@ -141,7 +141,7 @@ const AddDialog = () => {
           accountLoading === "pending" ||
           categoryLoading === "pending"
         }
-        className="flex aspect-square w-10 cursor-pointer items-center justify-center rounded-full hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+        className="col-span-1 flex aspect-square w-10 cursor-pointer items-center justify-center rounded-full hover:bg-gray-100 disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
         <Plus className={clsx("stroke-3")} size={15} />
       </DialogTrigger>

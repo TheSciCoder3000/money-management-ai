@@ -15,10 +15,13 @@ async function AccountDetails({ params }: PageProps<"/account/[accountId]">) {
       <h1 className="mb-4 text-4xl">{account.name}</h1>
       <PageBreadcrumb title={account.name} />
       <div className="grid grid-cols-4 gap-4">
-        <Container className="col-span-3 flex items-center">
+        <Container className="col-span-full hidden items-center md:flex lg:col-span-3">
           <IncomeExpenseChart account={account} />
         </Container>
-        <AccountDetail account={account} />
+        <AccountDetail
+          className="col-span-full lg:col-span-1"
+          account={account}
+        />
         <AccountTransactionList account={account} />
       </div>
     </div>

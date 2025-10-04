@@ -10,12 +10,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import clsx from "clsx";
 
 interface TransactionTypeSelectProps {
+  className?: string;
   onChange?: (value: TransactionType | null) => void;
 }
 const TransactionTypeSelect: React.FC<TransactionTypeSelectProps> = ({
   onChange,
+  className,
 }) => {
   return (
     <Select
@@ -25,7 +28,7 @@ const TransactionTypeSelect: React.FC<TransactionTypeSelectProps> = ({
       }
       defaultValue="all"
     >
-      <SelectTrigger className="w-[150px]">
+      <SelectTrigger className={clsx(className, "w-[150px]")}>
         <SelectValue placeholder="Select an Account" />
       </SelectTrigger>
       <SelectContent>

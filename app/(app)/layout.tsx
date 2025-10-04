@@ -8,7 +8,7 @@ function Layout({ children }: LayoutProps<"/">) {
   return (
     <StoreProvider>
       <UserProvider>
-        <div className="flex h-screen w-screen overflow-hidden bg-gray-100/70">
+        <div className="flex h-screen w-screen flex-col overflow-hidden bg-gray-100/70 lg:flex-row">
           <Navbar />
           <div className="relative max-h-screen flex-1 overflow-auto">
             {children}

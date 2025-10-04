@@ -11,11 +11,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAppSelector } from "@/redux/store";
+import clsx from "clsx";
 
 interface AccountSelectProps {
+  className?: string;
   onChange?: (value: string | null) => void;
 }
-const AccountSelect: React.FC<AccountSelectProps> = ({ onChange }) => {
+const AccountSelect: React.FC<AccountSelectProps> = ({
+  onChange,
+  className,
+}) => {
   const { accounts } = useAppSelector((state) => state.account);
 
   return (
@@ -25,7 +30,7 @@ const AccountSelect: React.FC<AccountSelectProps> = ({ onChange }) => {
       }
       defaultValue="all"
     >
-      <SelectTrigger className="w-[150px]">
+      <SelectTrigger className={clsx(className, "w-[150px]")}>
         <SelectValue placeholder="Select an Account" />
       </SelectTrigger>
       <SelectContent>

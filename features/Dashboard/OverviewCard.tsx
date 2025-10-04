@@ -44,7 +44,7 @@ const OverviewCard: React.FC<OverviewProps> = ({ className }) => {
   ];
 
   return (
-    <Container className={cn("flex-row", className)}>
+    <Container className={cn("flex-col gap-4 md:flex-row", className)}>
       {content.map((Item, indx) => (
         <div key={indx} className="flex gap-2 pr-4">
           <div className="flex aspect-square w-12 items-center justify-center rounded-md bg-gray-100/80 p-2">

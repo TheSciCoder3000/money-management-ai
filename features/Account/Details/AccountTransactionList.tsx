@@ -167,8 +167,14 @@ const AccountTransactionList: React.FC<AccountTransactionListProps> = ({
       onRefresh={() => dispatch(fetchTransactons())}
       Selects={
         <>
-          <TransactionTypeSelect onChange={setTransactionType} />
-          <DateRangePicker onValueChange={setDateRange} />
+          <TransactionTypeSelect
+            className="col-span-2"
+            onChange={setTransactionType}
+          />
+          <DateRangePicker
+            className="col-span-full"
+            onValueChange={setDateRange}
+          />
         </>
       }
     />
