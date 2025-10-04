@@ -24,8 +24,6 @@ export async function POST(reqeust: Request) {
     );
     const accountFuncs = res.filter((item) => item.name === "create_account");
 
-    console.log({ transactionFuncs, accountFuncs });
-
     if (transactionFuncs.length > 0) {
       await CreateTransaction(
         transactionFuncs.map((trans) => ({
@@ -75,7 +73,7 @@ export async function POST(reqeust: Request) {
     } else throw new Error("invalid ai method");
   } catch (e) {
     if (e instanceof Error) {
-      console.error(e.message);
+      console.error(`/api: ${e.message}`);
       return Response.json({ message: e.message }, { status: 500 });
     }
     return Response.json({ message: "error" }, { status: 500 });

@@ -18,6 +18,8 @@ const Controls = () => {
     setSending(true);
 
     try {
+      if (prompt.trim().length === 0) throw new Error("invalid prompt");
+
       const res = await fetch("/api/ai", {
         method: "POST",
         headers: {
@@ -41,9 +43,15 @@ const Controls = () => {
         // );
         toast.info(`${data.method} created successfully`);
         setPrompt("");
+      } else {
+        const { message } = (await res.json()) as { message: string };
+        throw new Error(message);
       }
     } catch (e) {
-      if (e instanceof Error) console.error(e.message);
+      if (e instanceof Error) {
+        console.error(e.message);
+        return toast.error(e.message);
+      }
       toast.error("Unable to follow command");
     } finally {
       setSending(false);
@@ -51,11 +59,14 @@ const Controls = () => {
   };
 
   return (
-    <div className="sticky bottom-7 left-[50%] col-span-4 mb-4 flex h-fit w-fit -translate-x-[50%] justify-center">
-      <div className="z-5 flex h-fit w-fit items-center gap-2 rounded-full bg-white p-1 shadow-lg">
+    <div className="pointer-events-none sticky bottom-7 left-0 col-span-4 mb-4 flex h-fit w-full -translate-x-[0%] justify-center px-6">
+      <div className="pointer-events-auto z-5 flex h-fit w-full max-w-[40rem] items-center gap-2 rounded-full bg-white p-1 shadow-lg">
         <AddDialog />
-        <form onSubmit={handlePromptSubmit} className="flex items-center">
-          <div className="w-[30rem]">
+        <form
+          onSubmit={handlePromptSubmit}
+          className="flex flex-1 items-center"
+        >
+          <div className="w-full">
             <input
               placeholder="Add transactions or accounts here"
               disabled={sending}

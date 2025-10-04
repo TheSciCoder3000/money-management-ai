@@ -94,12 +94,20 @@ export async function AnalyzePrompt(
     service_tier: "priority",
   });
 
-  const text = result.output as {
+  const output = (await JSON.parse(result.output_text)) as {
+    status: string;
+    message: string;
+  };
+
+  if (output.status === "failed") throw new Error(output.message);
+  console.log(output);
+
+  const tools = result.output as {
     name: "create_account" | "create_transaction";
     arguments: string;
   }[];
 
-  return text.map((item) => ({
+  return tools.map((item) => ({
     ...item,
     arguments: JSON.parse(item.arguments),
   }));
